@@ -7,7 +7,6 @@ class MarioAmplitud (Mario):
   Clase que modela un agente que intentará resolver un laberinto
   revisando todas las posibilidades y encontrando el camino más corto.
   """
-  _queso = (0, 0)
   _inicio = (0,0)
   _laberinto = []
   _nodos = []
@@ -39,10 +38,8 @@ class MarioAmplitud (Mario):
 
     for i in range (len(laberinto)):
       for j in range (len(laberinto[0])):
-        if (laberinto[i][j] == 6):
-          self._queso = (j, i)
-        elif (laberinto[i][j] == 2):
-          laberinto[i][j] = 0
+        if (laberinto[i][j] == 2):
+          self._posX, self._posY = (j, i)
           self._inicio = (j, i)
 
 
@@ -158,10 +155,15 @@ class MarioAmplitud (Mario):
 
 
   def mover(self, *args: tuple):
-    if (len(self._solucion) == 0):
+    if (len(self._solucion) == 1):
       return (0, 0)
+
     viejasCoordenadas = self._solucion.pop(0)
+
     self._posX, self._posY = self._solucion[0]
-    movimiento = (self._posX - viejasCoordenadas[0], self._posY - viejasCoordenadas[1])
-    print("Viejas: {}, nuevas {}, movimiento: {}".format(viejasCoordenadas, (self._posX, self._posY), movimiento))
+
+    movimiento = (self._posX - viejasCoordenadas[0], viejasCoordenadas[1] - self._posY)
+
+    print("Viejas: {}, nuevas: {}, movimiento: {}".format(viejasCoordenadas, (self._posX, self._posY), movimiento))
+
     return movimiento

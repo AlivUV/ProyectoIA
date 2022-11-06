@@ -9,8 +9,8 @@ class Laberinto:
   Contiene al agente y una matriz cuadrada simulando el laberinto.
   """
   _mario = None
-  _queso = ()
-  _cuadricula = []
+  _princesa = ()
+  _laberinto = []
 
 
   def __init__(self, *args: tuple):
@@ -40,15 +40,15 @@ class Laberinto:
     """
     self._mario = MarioSimple(tamano)
 
-    self._cuadricula = [[{}] * tamano for i in range(tamano)]
+    self._laberinto = [[{}] * tamano for i in range(tamano)]
 
     for i in range(random.randrange(tamano)*random.randrange(tamano)):
-      self._cuadricula[random.randrange(tamano)][random.randrange(tamano)] = 1
+      self._laberinto[random.randrange(tamano)][random.randrange(tamano)] = 1
 
     marioX, marioY = self._mario.getPos()
-    self._queso = (random.randrange(tamano), random.randrange(tamano))
-    self._cuadricula[marioX][marioY] = 2
-    self._cuadricula[self._queso[0]][self._queso[1]] = 3
+    self._princesa = (random.randrange(tamano), random.randrange(tamano))
+    self._laberinto[marioX][marioY] = 2
+    self._laberinto[self._princesa[0]][self._princesa[1]] = 6
 
 
   def _constructorDefinido(self, laberinto: list[list]):
@@ -59,23 +59,23 @@ class Laberinto:
     Args:
         laberinto (list[list[int]]): Matriz cuadrada con los datos del nuevo laberinto.
     """
-    self._cuadricula = [[{}] * len(laberinto) for i in range(len(laberinto))]
+    self._laberinto = [[{}] * len(laberinto) for i in range(len(laberinto))]
 
     for i in range (len(laberinto)):
-      for j in range (len(laberinto)):
-        self._cuadricula[i][j] = laberinto[i][j]
+      for j in range (len(laberinto[0])):
+        self._laberinto[i][j] = laberinto[i][j]
 
         if (laberinto[i][j] == 2):
           self._mario = MarioAmplitud(laberinto)
-        elif (laberinto[i][j] == 3):
-          self._queso = (j, i)
+        elif (laberinto[i][j] == 6):
+          self._princesa = (j, i)
 
 
   def imprimir(self):
     """
     Muestra en pantalla el laberinto en forma de matriz cuadrada.
     """
-    for row in self._cuadricula:
+    for row in self._laberinto:
       for obj in row:
         print(" {} ".format(obj))
 
@@ -87,7 +87,7 @@ class Laberinto:
     Returns:
         list: Matriz cuadrada de tamaño n con los datos del laberinto.
     """
-    return self._cuadricula
+    return self._laberinto
 
 
   def getAlrededor(self, posX: int, posY: int):
@@ -105,23 +105,23 @@ class Laberinto:
 
     if (posX == 0):
       alrededor[0] = 1
-      alrededor[2] = self._cuadricula[posY][posX + 1]
-    elif (posX == len(self._cuadricula) - 1):
-      alrededor[0] = self._cuadricula[posY][posX - 1]
+      alrededor[2] = self._laberinto[posY][posX + 1]
+    elif (posX == len(self._laberinto) - 1):
+      alrededor[0] = self._laberinto[posY][posX - 1]
       alrededor[2] = 1
     else:
-      alrededor[0] = self._cuadricula[posY][posX - 1]
-      alrededor[2] = self._cuadricula[posY][posX + 1]
+      alrededor[0] = self._laberinto[posY][posX - 1]
+      alrededor[2] = self._laberinto[posY][posX + 1]
 
     if (posY == 0):
       alrededor[1] = 1
-      alrededor[3] = self._cuadricula[posY + 1][posX]
-    elif (posY == len(self._cuadricula) - 1):
-      alrededor[1] = self._cuadricula[posY - 1][posX]
+      alrededor[3] = self._laberinto[posY + 1][posX]
+    elif (posY == len(self._laberinto) - 1):
+      alrededor[1] = self._laberinto[posY - 1][posX]
       alrededor[3] = 1
     else:
-      alrededor[1] = self._cuadricula[posY - 1][posX]
-      alrededor[3] = self._cuadricula[posY + 1][posX]
+      alrededor[1] = self._laberinto[posY - 1][posX]
+      alrededor[3] = self._laberinto[posY + 1][posX]
 
     return alrededor
 
@@ -137,7 +137,7 @@ class Laberinto:
     Returns:
         int: Valor de la casilla (X, Y)
     """
-    return self._cuadricula[posY][posX]
+    return self._laberinto[posY][posX]
 
 
   def setPos(self, posX: int, posY: int, dato: int):
@@ -149,7 +149,7 @@ class Laberinto:
         posY (int): Posición en Y de la casilla.
         dato (int): Nuevo valor.
     """
-    self._cuadricula[posY][posX] = dato
+    self._laberinto[posY][posX] = dato
 
 
   def onTic(self):
@@ -161,10 +161,13 @@ class Laberinto:
 
     self.setPos(posMario[0], posMario[1], self.getPos(posMario[0], posMario[1]) - 2)
 
-    movimiento = self._mario.mover(alrededor[0], alrededor[1], alrededor[2], alrededor[3], self._queso)
+    movimiento = self._mario.mover(alrededor[0], alrededor[1], alrededor[2], alrededor[3], self._princesa)
 
     posMario[0] += movimiento[0]
     posMario[1] -= movimiento[1]
+
+    print("Mario: {}".format(posMario))
+
 
     self.setPos(posMario[0], posMario[1], self.getPos(posMario[0], posMario[1]) + 2)
 

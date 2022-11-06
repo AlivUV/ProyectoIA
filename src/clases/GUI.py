@@ -130,9 +130,9 @@ class GUI():
       self._pintarMuro(x, y)
     elif (tipo == 2):
       self._pintarRaton(x, y)
-    elif (tipo == 3):
+    elif (tipo == 6):
       self._pintarQueso(x, y)
-    elif (tipo == 5):
+    elif (tipo == 8):
       self._pintarFinal(x, y)
     else:
       self._pintarCasillaVacia(x, y)
