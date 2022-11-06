@@ -4,7 +4,7 @@ from json import loads
 from clases.GUI import GUI
 
 def cargarLaberinto():
-  laberinto = open("./src/data/laberintoProyecto.txt").read()
+  laberinto = open("./src/data/laberinto/laberintoProyecto.txt").read()
 
   laberinto = laberinto.split("\n")
 

@@ -76,8 +76,7 @@ class Laberinto:
     Muestra en pantalla el laberinto en forma de matriz cuadrada.
     """
     for row in self._laberinto:
-      for obj in row:
-        print(" {} ".format(obj))
+      print(row)
 
 
   def getLaberinto(self):
@@ -165,9 +164,6 @@ class Laberinto:
 
     posMario[0] += movimiento[0]
     posMario[1] -= movimiento[1]
-
-    print("Mario: {}".format(posMario))
-
 
     self.setPos(posMario[0], posMario[1], self.getPos(posMario[0], posMario[1]) + 2)
 

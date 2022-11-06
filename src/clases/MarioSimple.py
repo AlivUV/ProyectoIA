@@ -22,7 +22,7 @@ class MarioSimple(Mario):
         + y (int): Posición en y del agente.
     """
     super().__init__(*args)
-    self._movimientos = loads(open("./src/data/MarioSimple.json").read())
+    self._movimientos = loads(open("./src/data/estados/MarioSimple.json").read())
 
 
   def mover(self, izquierda: int, arriba: int, derecha: int, abajo: int, queso: int):
@@ -39,29 +39,19 @@ class MarioSimple(Mario):
         tuple: Movimiento realizado por el agente para llegar a la nueva posición
     """
     if (queso == (self._posX, self._posY)):
-      print("Comer queso")
       movimiento = (0, 0)
     elif (izquierda == 3):
-      print("izquierda")
       movimiento = (-1, 0)
     elif (arriba == 3):
-      print("arriba")
       movimiento = (0, 1)
     elif (derecha == 3):
-      print("derecha")
       movimiento = (1, 0)
     elif (abajo == 3):
-      print("abajo")
       movimiento = (0, -1)
     else:
       movimiento = self._movimientos[str(izquierda) + str(arriba) + str(derecha) + str(abajo)]
-      print("I: {}, Ar: {}, D: {}, Ab: {}".format(izquierda, arriba, derecha, abajo))
-      print("Del objeto: {}".format(movimiento))
-      print("Posición actual: {}".format((self._posX, self._posY)))
 
     self._posX += movimiento[0]
     self._posY -= movimiento[1]
-
-    print("Nueva posición: {}".format((self._posX, self._posY)))
 
     return movimiento

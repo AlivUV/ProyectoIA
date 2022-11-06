@@ -67,14 +67,14 @@ class MarioAmplitud (Mario):
     añade a la lista de nodos por expandir.
     '''
     coordenadas = self._listaEspera[0]["coordenadas"]
-    #print("Actual: {}".format(self._listaEspera[0]))
+
     if (self._laberinto[coordenadas[1]][coordenadas[0]] != 6):
       self._crearHijos(self._listaEspera.pop(0))
     else:
       self._terminado = True
       self._crearSolucion(self._listaEspera[0])
       self._listaEspera.clear()
-      print(self._solucion)
+      print("Solucion: {}".format(self._solucion))
 
 
   def _crearHijos(self, nodo):
@@ -91,19 +91,6 @@ class MarioAmplitud (Mario):
           "coordenadas": (coordenadas[1], coordenadas[2])
         }
         self._buscarCiclos(nodo, nuevoNodo)
-    '''
-    print(self._listaEspera)
-
-    if (self._laberinto[nodo["coordenadas"][0]][nodo["coordenadas"][1]] == 0):
-      self._laberinto[nodo["coordenadas"][0]][nodo["coordenadas"][1]] = 2
-
-    for row in self._laberinto:
-      print(row)
-    print()
-
-    if (self._laberinto[nodo["coordenadas"][0]][nodo["coordenadas"][1]] == 2):
-      self._laberinto[nodo["coordenadas"][0]][nodo["coordenadas"][1]] = 0
-    '''
 
 
   def _getAlrededor(self, x: int, y: int):
@@ -163,7 +150,5 @@ class MarioAmplitud (Mario):
     self._posX, self._posY = self._solucion[0]
 
     movimiento = (self._posX - viejasCoordenadas[0], viejasCoordenadas[1] - self._posY)
-
-    print("Viejas: {}, nuevas: {}, movimiento: {}".format(viejasCoordenadas, (self._posX, self._posY), movimiento))
 
     return movimiento
