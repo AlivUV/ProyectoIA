@@ -1,6 +1,6 @@
 # pruebas.py
-from json import loads
-from clases.MarioAmplitud import MarioAmplitud
+
+from clases.MarioCostos import MarioCostos
 
 def cargarLaberinto():
   laberinto = open("./src/data/laberinto/laberintoProyecto.txt").read()
@@ -16,4 +16,4 @@ def cargarLaberinto():
 
   return laberinto
 
-mario = MarioAmplitud(cargarLaberinto())
+mario = MarioCostos(cargarLaberinto())

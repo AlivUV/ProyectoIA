@@ -1,8 +1,9 @@
-# MarioAmplitud.py
+# MarioCostos.py
 
+from json import loads
 from clases.Mario import Mario
 
-class MarioAmplitud (Mario):
+class MarioCostos (Mario):
   """
   Clase que modela un agente que intentará resolver un laberinto
   revisando todas las posibilidades y encontrando el camino más corto.
@@ -13,6 +14,7 @@ class MarioAmplitud (Mario):
   _listaEspera = []
   _solucion = []
   _terminado = False
+  _costoXCasilla = {}
 
 
   def __init__(self, *args: tuple):
@@ -30,11 +32,12 @@ class MarioAmplitud (Mario):
       super().__init__(args[0])
     elif(isinstance(args[0], list)):
       self.definirLaberinto(args[0])
-      self.amplitud()
+      self.costos()
 
 
   def definirLaberinto(self, laberinto: list):
     self._laberinto = laberinto
+    self._costoXCasilla = loads(open('./src/data/estados/costos.json').read())
 
     for i in range (len(laberinto)):
       for j in range (len(laberinto[0])):
@@ -43,15 +46,16 @@ class MarioAmplitud (Mario):
           self._inicio = (j, i)
 
 
-  def amplitud(self):
+  def costos(self):
     '''
-    Uso de la inteligencia artificial por amplitud
+    Uso de la inteligencia artificial por costos
     para solucionar el problema de Mario en el laberinto.
     '''
     nodoInicial = {
       "padre": None,
       "posicion": len(self._nodos),
-      "coordenadas": self._inicio
+      "coordenadas": self._inicio,
+      "costo": 0
     }
 
     self._nodos.append(nodoInicial)
@@ -66,31 +70,48 @@ class MarioAmplitud (Mario):
     Verifica si el nodo es una meta; crea los hijos y los 
     añade a la lista de nodos por expandir.
     '''
-    coordenadas = self._listaEspera[0]["coordenadas"]
+    nodoAExpandir = self._evaluarCostos()
+    coordenadas = self._listaEspera[nodoAExpandir]["coordenadas"]
 
     if (self._laberinto[coordenadas[1]][coordenadas[0]] != 6):
-      self._crearHijos(self._listaEspera.pop(0))
+      self._crearHijos(self._listaEspera.pop(nodoAExpandir))
     else:
       self._terminado = True
-      self._crearSolucion(self._listaEspera[0])
+      self._crearSolucion(self._listaEspera[nodoAExpandir])
       self._listaEspera.clear()
       print("Solucion: {}".format(self._solucion))
 
 
-  def _crearHijos(self, nodo):
+  def _evaluarCostos(self):
+    ''' 
+    Recorre la lista de espera para encontrar el nodo con el menor costo
+    '''
+    costo = 1000000
+    posicion = 0
+
+    for i in range(len(self._listaEspera)):
+      if (self._listaEspera[i]["costo"] < costo):
+        costo = self._listaEspera[i]["costo"]
+        posicion = i
+
+    return posicion
+
+
+  def _crearHijos(self, padre):
     '''
     Retorna una lista con los hijos de un nodo determinado.
     '''
-    alrededor = self._getAlrededor(nodo["coordenadas"][0], nodo["coordenadas"][1])
+    alrededor = self._getAlrededor(padre["coordenadas"][0], padre["coordenadas"][1])
 
     for coordenadas in alrededor:
       if (coordenadas[0] != 1):
         nuevoNodo = {
-          "padre": nodo["posicion"],
+          "padre": padre["posicion"],
           "posicion": len(self._nodos),
-          "coordenadas": (coordenadas[1], coordenadas[2])
+          "coordenadas": (coordenadas[1], coordenadas[2]),
+          "costo": padre["costo"] + self._costoXCasilla[str(self._laberinto[coordenadas[2]][coordenadas[1]])]
         }
-        self._buscarCiclos(nodo, nuevoNodo)
+        self._buscarCiclos(padre, nuevoNodo)
 
 
   def _getAlrededor(self, x: int, y: int):
