@@ -15,6 +15,7 @@ class MarioCostos (Mario):
   _solucion = []
   _terminado = False
   _costoXCasilla = {}
+  _accionesPorEstado = []
 
 
   def __init__(self, *args: tuple):
@@ -38,6 +39,13 @@ class MarioCostos (Mario):
   def definirLaberinto(self, laberinto: list):
     self._laberinto = laberinto
     self._costoXCasilla = loads(open('./src/data/estados/costos.json').read())
+    self._accionesPorEstado = [
+      self._estadoGenerico,
+      self._estadoGenerico,
+      self._estadoGenerico,
+      self._estadoEstrella,
+      self._estadoFlor
+    ]
 
     for i in range (len(laberinto)):
       for j in range (len(laberinto[0])):
@@ -55,7 +63,10 @@ class MarioCostos (Mario):
       "padre": None,
       "posicion": len(self._nodos),
       "coordenadas": self._inicio,
-      "costo": 0
+      "costo": 0,
+      "estado": {
+        "valor": 0
+      }
     }
 
     self._nodos.append(nodoInicial)
@@ -76,9 +87,12 @@ class MarioCostos (Mario):
     if (self._laberinto[coordenadas[1]][coordenadas[0]] != 6):
       self._crearHijos(self._listaEspera.pop(nodoAExpandir))
     else:
+      print("Nodos creados: {}".format(len(self._nodos)))
+      print("Costo total: {}".format(self._listaEspera[nodoAExpandir]["costo"]))
       self._terminado = True
       self._crearSolucion(self._listaEspera[nodoAExpandir])
       self._listaEspera.clear()
+      print("Pasos de la solución: {}".format(len(self._solucion) - 1))
       print("Solucion: {}".format(self._solucion))
 
 
@@ -105,13 +119,7 @@ class MarioCostos (Mario):
 
     for coordenadas in alrededor:
       if (coordenadas[0] != 1):
-        nuevoNodo = {
-          "padre": padre["posicion"],
-          "posicion": len(self._nodos),
-          "coordenadas": (coordenadas[1], coordenadas[2]),
-          "costo": padre["costo"] + self._costoXCasilla[str(self._laberinto[coordenadas[2]][coordenadas[1]])]
-        }
-        self._buscarCiclos(padre, nuevoNodo)
+        self._buscarCiclos(padre, self._evaluarEstado(padre, coordenadas))
 
 
   def _getAlrededor(self, x: int, y: int):
@@ -146,7 +154,7 @@ class MarioCostos (Mario):
     if (ancestro["padre"] == None):
       self._nodos.append(nodo)
       self._listaEspera.append(nodo)
-    elif (ancestro["coordenadas"] == nodo["coordenadas"]):
+    elif (ancestro["coordenadas"] == nodo["coordenadas"]):# and ancestro["estado"] == nodo["estado"]):
       return
     else:
       self._buscarCiclos(self._nodos[ancestro["padre"]], nodo)
@@ -173,3 +181,73 @@ class MarioCostos (Mario):
     movimiento = (self._posX - viejasCoordenadas[0], viejasCoordenadas[1] - self._posY)
 
     return movimiento
+
+
+  def _evaluarEstado (self, padre, coordenadas):
+    return self._accionesPorEstado[padre["estado"]["valor"]](padre, coordenadas)
+
+
+  def _estadoGenerico (self, padre, coordenadas):
+    estado = {
+      "valor": 0
+    }
+
+    if (self._laberinto[coordenadas[2]][coordenadas[1]] == 3):
+      estado["valor"] = 3
+      estado["duracion"] = 6
+    elif (self._laberinto[coordenadas[2]][coordenadas[1]] == 4):
+      estado["valor"] = 3
+      estado["cantidad"] = 1
+
+    return {
+      "padre": padre["posicion"],
+      "posicion": len(self._nodos),
+      "coordenadas": (coordenadas[1], coordenadas[2]),
+      "costo": padre["costo"] + self._costoXCasilla[str(self._laberinto[coordenadas[2]][coordenadas[1]])],
+      "estado": estado
+    }
+
+
+  def _estadoEstrella (self,  padre, coordenadas):
+    estado = {
+      "valor": 3,
+      "duracion": padre["estado"]["duracion"] - 1
+    }
+
+    if (self._laberinto[coordenadas[2]][coordenadas[1]] == 3):
+      estado["duracion"] += 6
+    elif (estado["duracion"] == 0):
+      estado["valor"] = 0
+
+    return {
+      "padre": padre["posicion"],
+      "posicion": len(self._nodos),
+      "coordenadas": (coordenadas[1], coordenadas[2]),
+      "costo": padre["costo"] + 0.5,
+      "estado": estado
+    }
+
+
+  def _estadoFlor (self,  padre, coordenadas):
+    estado = {
+      "valor": 4,
+      "cantidad": padre["estado"]["cantidad"]
+    }
+    costo = 1
+    cantidad = 0
+
+    if (self._laberinto[coordenadas[2]][coordenadas[1]] == 4):
+      estado["cantidad"] += 1
+    elif (self._laberinto[coordenadas[2]][coordenadas[1]] != 5):
+      costo = self._costoXCasilla[str(self._laberinto[coordenadas[2]][coordenadas[1]])]
+    else:
+      estado["cantidad"] -= 1
+      estado["valor"] = 4 if (cantidad > 0) else 0
+
+    return {
+      "padre": padre["posicion"],
+      "posicion": len(self._nodos),
+      "coordenadas": (coordenadas[1], coordenadas[2]),
+      "costo": padre["costo"] + costo,
+      "estado": estado
+    }
