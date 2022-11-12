@@ -66,15 +66,23 @@ class MarioAmplitud (Mario):
     Verifica si el nodo es una meta; crea los hijos y los 
     añade a la lista de nodos por expandir.
     '''
-    coordenadas = self._listaEspera[0]["coordenadas"]
+    nodoAExpandir = self._evaluarNodoAExpandir()
+    coordenadas = self._listaEspera[nodoAExpandir]["coordenadas"]
 
     if (self._laberinto[coordenadas[1]][coordenadas[0]] != 6):
-      self._crearHijos(self._listaEspera.pop(0))
+      self._crearHijos(self._listaEspera.pop(nodoAExpandir))
     else:
       self._terminado = True
-      self._crearSolucion(self._listaEspera[0])
+      self._crearSolucion(self._listaEspera[nodoAExpandir])
       self._listaEspera.clear()
       print("Solucion: {}".format(self._solucion))
+
+
+  def _evaluarNodoAExpandir(self):
+    ''' 
+    Recorre la lista de espera para encontrar el próximo nodo para expandir.
+    '''
+    return 0
 
 
   def _crearHijos(self, nodo):
