@@ -82,7 +82,7 @@ class MarioCostos (Mario):
     Verifica si el nodo es una meta; crea los hijos y los 
     añade a la lista de nodos por expandir.
     '''
-    nodoAExpandir = self._evaluarCostos()
+    nodoAExpandir = self._evaluarNodoAExpandir()
     coordenadas = self._listaEspera[nodoAExpandir]["coordenadas"]
 
     if (self._laberinto[coordenadas[1]][coordenadas[0]] != 6):
@@ -97,7 +97,7 @@ class MarioCostos (Mario):
       print("Solucion: {}".format(self._solucion))
 
 
-  def _evaluarCostos(self):
+  def _evaluarNodoAExpandir(self):
     ''' 
     Recorre la lista de espera para encontrar el nodo con el menor costo
     '''
