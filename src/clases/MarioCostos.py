@@ -198,7 +198,7 @@ class MarioCostos (Mario):
       estado["duracion"] = 6
       usado.extend([coordenadas[1:]])
     elif (valorCasilla == 4):
-      estado["valor"] = 3
+      estado["valor"] = 4
       estado["cantidad"] = 1
       usado.extend([coordenadas[1:]])
 
