@@ -25,7 +25,7 @@ class MarioAmplitud (Mario):
         + laberinto (list): Matriz cuadrada que contiene los datos del laberinto.
     """
     if (len(args) != 1):
-      raise Exception("El constructor debe recibir 1 o 3 argumentos, pero recibió {}".format(len(args)))
+      raise Exception("El constructor debe recibir 1 argumento, pero recibió {}".format(len(args)))
     elif (isinstance(args[0], int)):
       super().__init__(args[0])
     elif(isinstance(args[0], list)):
