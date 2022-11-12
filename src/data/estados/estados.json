@@ -1,0 +1,24 @@
+[
+  {
+    "nombre": "Casilla vacía"
+  },
+  {
+    "nombre": "Muro"
+  },
+  {
+    "nombre": "Mario"
+  },
+  {
+    "nombre": "Estrella",
+    "duracion": 6
+  },
+  {
+    "nombre": "Flor"
+  },
+  {
+    "nombre": "Koopa"
+  },
+  {
+    "nombre": "Princesa"
+  }
+]

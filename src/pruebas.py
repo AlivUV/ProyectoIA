@@ -1,6 +1,7 @@
 # pruebas.py
-from json import loads
-from clases.MarioAmplitud import MarioAmplitud
+
+from clases.MarioCostos import MarioCostos
+from datetime import datetime
 
 def cargarLaberinto():
   laberinto = open("./src/data/laberinto/laberintoProyecto.txt").read()
@@ -16,4 +17,10 @@ def cargarLaberinto():
 
   return laberinto
 
-mario = MarioAmplitud(cargarLaberinto())
+inicio = datetime.now()
+
+mario = MarioCostos(cargarLaberinto())
+
+duracion = datetime.now() - inicio
+
+print("Duración: {}".format(duracion))
