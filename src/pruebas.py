@@ -1,6 +1,9 @@
 # pruebas.py
 
+from clases.MarioAmplitud import MarioAmplitud
 from clases.MarioCostos import MarioCostos
+from clases.MarioAvara import MarioAvara
+from clases.MarioA import MarioA
 from datetime import datetime
 
 def cargarLaberinto():
@@ -17,9 +20,41 @@ def cargarLaberinto():
 
   return laberinto
 
+print("===Amplitud===")
+
+inicio = datetime.now()
+
+mario = MarioAmplitud(cargarLaberinto())
+
+duracion = datetime.now() - inicio
+
+print("Duración: {}".format(duracion))
+
+print("===Costos===")
+
 inicio = datetime.now()
 
 mario = MarioCostos(cargarLaberinto())
+
+duracion = datetime.now() - inicio
+
+print("Duración: {}".format(duracion))
+
+print("===Avara===")
+
+inicio = datetime.now()
+
+mario = MarioAvara(cargarLaberinto())
+
+duracion = datetime.now() - inicio
+
+print("Duración: {}".format(duracion))
+
+print("===A*===")
+
+inicio = datetime.now()
+
+mario = MarioA(cargarLaberinto())
 
 duracion = datetime.now() - inicio
 

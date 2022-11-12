@@ -27,6 +27,10 @@ class MarioCostos (Mario):
         + tamaño (int): Tamaño de la matriz cuadrada.
         + laberinto (list): Matriz cuadrada que contiene los datos del laberinto.
     """
+    self._solucion.clear()
+    self._nodos.clear()
+    self._listaEspera.clear()
+
     if (len(args) != 1):
       raise Exception("El constructor debe recibir 1 argumento, pero recibió {}".format(len(args)))
     elif (isinstance(args[0], int)):
@@ -88,9 +92,9 @@ class MarioCostos (Mario):
     if (self._laberinto[coordenadas[1]][coordenadas[0]] != 6):
       self._crearHijos(self._listaEspera.pop(nodoAExpandir))
     else:
+      self._terminado = True
       print("Nodos creados: {}".format(len(self._nodos)))
       print("Costo total: {}".format(self._listaEspera[nodoAExpandir]["costo"]))
-      self._terminado = True
       self._crearSolucion(self._listaEspera[nodoAExpandir])
       self._listaEspera.clear()
       print("Pasos de la solución: {}".format(len(self._solucion) - 1))
