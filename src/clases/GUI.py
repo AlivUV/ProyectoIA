@@ -69,7 +69,7 @@ class GUI():
 
     self._pintarLaberinto()
 
-  def _constructorDefinido(self, matriz: list[list[int]], width: int = 600, height: int = 600):
+  def _constructorDefinido(self, matriz: list[list[int]], width: int = 900, height: int = 900):
     """
     Construye la ventana con la cuadrícula y los elementos del laberinto.
 
@@ -82,52 +82,69 @@ class GUI():
 
     self._tam = width * 0.9 / len(matriz)
 
-    self._pintarLaberinto(width=width, height=height)
+    self._crearVentana(width, height)
 
-  def _pintarLaberinto(self, width: int = 900, height: int = 900):
+    self._cargarImagenes()
+
+    self._pintarLaberinto()
+
+
+  def _crearVentana(self, width: int, height: int):
     """
-    Crea la ventana y grafica el laberinto con sus elementos.
+    Crea la ventana en donde se pintará el laberinto con sus elementos.
 
     Args:
       width (int optional): Ancho de la ventana. Defaults to 900.
       height (int optional): Alto de la ventana. Defaults to 900.
     """
+
     self._screenWidth = width * 0.9
     self._screenHeight = height * 0.9
 
     self._surface = pygame.display.set_mode((width, height))
 
+    self._surface.fill("light blue")
+
+
+  def _cargarImagenes(self):
+    """
+    Carga las imágenes para graficar el laberinto.
+    """
     self._muro = pygame.image.load("./src/resources/muro.png")
     self._muro = pygame.transform.scale(
-      self._muro, (self._tam * 1, self._tam * 1)
+      self._muro, (self._tam * 0.9, self._tam * 0.9)
     )
 
     self._mario = pygame.image.load("./src/resources/mario.png")
     self._mario = pygame.transform.scale(
-      self._mario, (self._tam * 0.9, self._tam * 1)
+      self._mario, (self._tam * 0.9, self._tam * 0.9)
     )
 
     self._princesa = pygame.image.load("./src/resources/princesa.png")
     self._princesa = pygame.transform.scale(
-      self._princesa, (self._tam * 0.85, self._tam * 0.85)
+      self._princesa, (self._tam * 0.9, self._tam * 0.9)
     )
 
     self._estrella = pygame.image.load("./src/resources/estrella.png")
     self._estrella = pygame.transform.scale(
-      self._estrella, (self._tam * 0.85, self._tam * 0.85)
+      self._estrella, (self._tam * 0.9, self._tam * 0.9)
     )
 
     self._koopa = pygame.image.load("./src/resources/koopa.jpg")
     self._koopa = pygame.transform.scale(
-      self._koopa, (self._tam * 0.85, self._tam * 0.85)
+      self._koopa, (self._tam * 0.9, self._tam * 0.9)
     )
 
     self._flor = pygame.image.load("./src/resources/flor.png")
     self._flor = pygame.transform.scale(
-      self._flor, (self._tam * 0.85, self._tam * 0.85)
+      self._flor, (self._tam * 0.9, self._tam * 0.9)
     )
 
-    self._surface.fill("light blue")
+
+  def _pintarLaberinto(self):
+    """
+    Grafica el laberinto con sus elementos.
+    """
 
     for i in range(len(self._laberinto.getLaberinto())):
       for j in range(len(self._laberinto.getLaberinto())):
@@ -136,6 +153,7 @@ class GUI():
     self._pintarBorde()
 
     pygame.display.update()
+
 
   def _pintarBorde(self):
     """
@@ -154,17 +172,17 @@ class GUI():
       tipo (int): Contenido de la casilla.
     """
     if (tipo == 1):
-      self._pintarMuro(x, y)
+      self._pintarElemento(self._muro, x, y)
     elif (tipo == 2):
-      self._pintarMario(x, y)
+      self._pintarElemento(self._mario, x, y)
     elif (tipo == 6):
-      self._pintarPrincesa(x, y)
+      self._pintarElemento(self._princesa, x, y)
     elif (tipo == 3):
-      self._pintarEstrella(x, y)
+      self._pintarElemento(self._estrella, x, y)
     elif (tipo == 4):
-      self._pintarFlores(x, y)
+      self._pintarElemento(self._flor, x, y)
     elif (tipo == 5):
-      self._pintarKoopa(x, y)
+      self._pintarElemento(self._koopa, x, y)
     elif (tipo == 8):
       self._pintarFinal(x, y)
     else:
@@ -183,20 +201,7 @@ class GUI():
     pygame.draw.rect(self._surface, "dark gray", (self._screenWidth * 0.05 + self._tam * x,
                      self._screenHeight * 0.05 + self._tam * y, self._tam, self._tam), self._lineWidth)
 
-  def _pintarMario(self, x: int, y: int):
-    """
-    Dibuja la casilla que contiene a Mario.
-
-    Args:
-      x (int): Posición de la casilla en X. 
-      y (int): Posición de la casilla en Y.
-    """
-    self._pintarCasillaVacia(x, y)
-
-    self._surface.blit(self._mario, (self._screenWidth * 0.05 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * y))
-
-  def _pintarPrincesa(self, x: int, y: int):
+  def _pintarElemento(self, elem, x: int, y: int):
     """
     Dibuja la casilla que contiene la princesa.
 
@@ -206,47 +211,8 @@ class GUI():
     """
     self._pintarCasillaVacia(x, y)
 
-    self._surface.blit(self._princesa, (self._screenWidth * 0.05 + self._tam * 0.1 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.1 + self._tam * y))
-
-  def _pintarEstrella(self, x: int, y: int):
-    """
-    Dibuja la casilla que contiene la estrella.
-
-    Args:
-      x (int): Posición de la casilla en X. 
-      y (int): Posición de la casilla en Y.
-    """
-    self._pintarCasillaVacia(x, y)
-
-    self._surface.blit(self._estrella, (self._screenWidth * 0.05 + self._tam * 0.1 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.1 + self._tam * y))
-
-  def _pintarKoopa(self, x: int, y: int):
-    """
-    Dibuja la casilla que contiene el koopa.
-
-    Args:
-      x (int): Posición de la casilla en X. 
-      y (int): Posición de la casilla en Y.
-    """
-    self._pintarCasillaVacia(x, y)
-
-    self._surface.blit(self._koopa, (self._screenWidth * 0.05 + self._tam * 0.1 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.1 + self._tam * y))
-
-  def _pintarFlores(self, x: int, y: int):
-    """
-    Dibuja la casilla que contiene el koopa.
-
-    Args:
-        x (int): Posición de la casilla en X. 
-        y (int): Posición de la casilla en Y.
-    """
-    self._pintarCasillaVacia(x, y)
-
-    self._surface.blit(self._flor, (self._screenWidth * 0.05 + self._tam * 0.1 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.1 + self._tam * y))
+    self._surface.blit(elem, (self._screenWidth * 0.05 + self._tam * 0.05 +
+                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
 
   def _pintarFinal(self, x: int, y: int):
     """
@@ -258,23 +224,10 @@ class GUI():
     """
     self._pintarCasillaVacia(x, y)
 
-    self._surface.blit(self._princesa, (self._screenWidth * 0.05 + self._tam * 0.1 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.1 + self._tam * y))
-    self._surface.blit(self._mario, (self._screenWidth * 0.05 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * y))
-
-  def _pintarMuro(self, x: int, y: int):
-    """
-    Dibuja la casilla por la que el agente no puede pasar.
-
-    Args:
-        x (int): Posición de la casilla en X. 
-        y (int): Posición de la casilla en Y.
-    """
-    pygame.draw.rect(self._surface, (50, 50, 50), (self._screenWidth * 0.05 +
-                                                   self._tam * x, self._screenHeight * 0.05 + self._tam * y, self._tam, self._tam))
-    self._surface.blit(self._muro, (self._screenWidth * 0.05 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * y))
+    self._surface.blit(self._mario, (self._screenWidth * 0.05 + self._tam * 0.05 +
+                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
+    self._surface.blit(self._princesa, (self._screenWidth * 0.05 + self._tam * 0.05 +
+                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
 
   def _manejarEventos(self):
     """
