@@ -40,7 +40,7 @@ class MarioCostos (Mario):
       self.costos()
 
 
-  def definirLaberinto(self, laberinto: list):
+  def definirLaberinto(self, laberinto: list[list[int]]):
     self._laberinto = laberinto
     self._costoXCasilla = loads(open('./src/data/estados/costos.json').read())
     self._accionesPorEstado = [
@@ -116,7 +116,7 @@ class MarioCostos (Mario):
     return posicion
 
 
-  def _crearHijos(self, padre):
+  def _crearHijos(self, padre: dict):
     '''
     Retorna una lista con los hijos de un nodo determinado.
     '''
@@ -152,7 +152,7 @@ class MarioCostos (Mario):
     return alrededor
 
 
-  def _buscarCiclos(self, ancestro, nodo):
+  def _buscarCiclos(self, ancestro: dict, nodo: dict):
     '''
     Compara un hijo con sus antecesores para no crear un ciclo.
     '''
@@ -165,7 +165,7 @@ class MarioCostos (Mario):
       self._buscarCiclos(self._nodos[ancestro["padre"]], nodo)
 
 
-  def _crearSolucion(self, nodoFinal):
+  def _crearSolucion(self, nodoFinal: dict):
     '''
     Construye la solución paso por paso devolviéndose por los 
     ancestros del nodo solución.
@@ -175,7 +175,7 @@ class MarioCostos (Mario):
       self._crearSolucion(self._nodos[nodoFinal["padre"]])
 
 
-  def _poderUsado(self, padre, coordenadas):
+  def _poderUsado(self, padre: dict, coordenadas: tuple[int]):
     for casilla in padre["usado"]:
       if (casilla == coordenadas):
         return 0
@@ -183,11 +183,11 @@ class MarioCostos (Mario):
     return self._laberinto[coordenadas[1]][coordenadas[0]]
 
 
-  def _evaluarEstado (self, padre, coordenadas: tuple):
+  def _evaluarEstado (self, padre: dict, coordenadas: tuple[int]):
     return self._accionesPorEstado[padre["estado"]["valor"]](padre, coordenadas, self._poderUsado(padre, coordenadas[1:]))
 
 
-  def _estadoGenerico (self, padre, coordenadas: tuple, valorCasilla: int):
+  def _estadoGenerico (self, padre: dict, coordenadas: tuple[int], valorCasilla: int):
     usado = padre["usado"].copy()
     estado = {
       "valor": 0
@@ -212,7 +212,7 @@ class MarioCostos (Mario):
     }
 
 
-  def _estadoEstrella (self, padre, coordenadas: tuple, valorCasilla: int):
+  def _estadoEstrella (self, padre: dict, coordenadas: tuple[int], valorCasilla: int):
     usado = padre["usado"].copy()
     estado = {
       "valor": 3,
@@ -238,7 +238,7 @@ class MarioCostos (Mario):
     }
 
 
-  def _estadoFlor (self, padre, coordenadas: tuple, valorCasilla: int):
+  def _estadoFlor (self, padre: dict, coordenadas: tuple[int], valorCasilla: int):
     usado = padre["usado"].copy()
     estado = {
       "valor": 4,

@@ -19,7 +19,7 @@ class GUI():
   _lineWidth = 5
 
 
-  def __init__(self, *args):
+  def __init__(self, *args: tuple):
     """
     Constructor de la interfaz gráfica.
 

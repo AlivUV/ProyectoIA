@@ -13,7 +13,7 @@ class MarioA (MarioCostos):
   _meta = (0, 0)
 
 
-  def definirLaberinto(self, laberinto: list):
+  def definirLaberinto(self, laberinto: list[list[int]]):
     self._laberinto = laberinto
     self._costoXCasilla = loads(open('./src/data/estados/costos.json').read())
     self._accionesPorEstado = [
@@ -52,7 +52,7 @@ class MarioA (MarioCostos):
 
     return posicion
 
-  def _evaluarHeuristica(self, coordenadas: tuple):
+  def _evaluarHeuristica(self, coordenadas: tuple[int]):
     '''
     Recorre la lista de espera para encontrar el nodo más cercano a la meta.
     '''

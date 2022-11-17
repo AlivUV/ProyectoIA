@@ -51,7 +51,7 @@ class Laberinto:
     self._laberinto[self._princesa[0]][self._princesa[1]] = 6
 
 
-  def _constructorDefinido(self, laberinto: list[list]):
+  def _constructorDefinido(self, laberinto: list[list[int]]):
     """
     Construye el laberinto con la matriz cuadrada recibida.
     Recorre la matriz para encontrar el agente y la meta.

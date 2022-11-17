@@ -37,7 +37,7 @@ class MarioAmplitud (Mario):
       self.amplitud()
 
 
-  def definirLaberinto(self, laberinto: list):
+  def definirLaberinto(self, laberinto: list[list[int]]):
     self._laberinto = laberinto
 
     for i in range (len(laberinto)):
@@ -91,7 +91,7 @@ class MarioAmplitud (Mario):
     return 0
 
 
-  def _crearHijos(self, nodo):
+  def _crearHijos(self, nodo: dict):
     '''
     Retorna una lista con los hijos de un nodo determinado.
     '''
@@ -132,7 +132,7 @@ class MarioAmplitud (Mario):
     return alrededor
 
 
-  def _buscarCiclos(self, ancestro, nodo):
+  def _buscarCiclos(self, ancestro: dict, nodo: dict):
     '''
     Compara un hijo con sus antecesores para no crear un ciclo.
     '''
@@ -145,7 +145,7 @@ class MarioAmplitud (Mario):
       self._buscarCiclos(self._nodos[ancestro["padre"]], nodo)
 
 
-  def _crearSolucion(self, nodoFinal):
+  def _crearSolucion(self, nodoFinal: dict):
     '''
     Construye la solución paso por paso devolviéndose por los 
     ancestros del nodo solución.

@@ -12,7 +12,7 @@ class MarioAvara (MarioAmplitud):
   _meta = (0, 0)
 
 
-  def definirLaberinto(self, laberinto: list):
+  def definirLaberinto(self, laberinto: list[list[int]]):
     self._laberinto = laberinto
 
     for i in range (len(laberinto)):
@@ -40,7 +40,7 @@ class MarioAvara (MarioAmplitud):
     return posicion
 
 
-  def _evaluarHeuristica(self, coordenadas: tuple):
+  def _evaluarHeuristica(self, coordenadas: tuple[int]):
     '''
     Recorre la lista de espera para encontrar el nodo más cercano a la meta.
     '''
