@@ -1,8 +1,10 @@
 # GUI.py
-from clases.Laberinto import Laberinto
+
 import pygame
 import time
+from json import loads
 
+from clases.Laberinto import Laberinto
 
 class GUI():
   """
@@ -60,12 +62,18 @@ class GUI():
       width (int optional): Ancho de la ventana. Defaults to 900.
       height (int optional): Alto de la ventana. Defaults to 900.
     """
+    self._elementos = loads(open('./src/data/estados/elementos.json').read())
+
     self._screenWidth = width * 0.9
     self._screenHeight = height * 0.9
 
     self._tam = width * 0.9 / tamano
 
-    self._laberinto = Laberinto(tamano)
+    self._laberinto = Laberinto(tamano, self._elementos)
+
+    self._crearVentana(width, height)
+
+    self._cargarImagenes()
 
     self._pintarLaberinto()
 
@@ -78,7 +86,9 @@ class GUI():
       width (int optional): Ancho de la ventana. Defaults to 900.
       height (int optional): Alto de la ventana. Defaults to 900.
     """
-    self._laberinto = Laberinto(matriz)
+    self._elementos = loads(open('./src/data/estados/elementos.json').read())
+
+    self._laberinto = Laberinto(matriz, self._elementos)
 
     self._tam = width * 0.9 / len(matriz)
 
@@ -110,34 +120,34 @@ class GUI():
     """
     Carga las imágenes para graficar el laberinto.
     """
-    self._muro = pygame.image.load("./src/resources/muro.png")
-    self._muro = pygame.transform.scale(
-      self._muro, (self._tam * 0.9, self._tam * 0.9)
+    self._elementos["muro"]["imagen"] = pygame.image.load("./src/resources/muro.png")
+    self._elementos["muro"]["imagen"] = pygame.transform.scale(
+      self._elementos["muro"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
     )
 
-    self._mario = pygame.image.load("./src/resources/mario.png")
-    self._mario = pygame.transform.scale(
-      self._mario, (self._tam * 0.9, self._tam * 0.9)
+    self._elementos["mario"]["imagen"] = pygame.image.load("./src/resources/mario.png")
+    self._elementos["mario"]["imagen"] = pygame.transform.scale(
+      self._elementos["mario"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
     )
 
-    self._princesa = pygame.image.load("./src/resources/princesa.png")
-    self._princesa = pygame.transform.scale(
-      self._princesa, (self._tam * 0.9, self._tam * 0.9)
+    self._elementos["princesa"]["imagen"] = pygame.image.load("./src/resources/princesa.png")
+    self._elementos["princesa"]["imagen"] = pygame.transform.scale(
+      self._elementos["princesa"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
     )
 
-    self._estrella = pygame.image.load("./src/resources/estrella.png")
-    self._estrella = pygame.transform.scale(
-      self._estrella, (self._tam * 0.9, self._tam * 0.9)
+    self._elementos["estrella"]["imagen"] = pygame.image.load("./src/resources/estrella.png")
+    self._elementos["estrella"]["imagen"] = pygame.transform.scale(
+      self._elementos["estrella"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
     )
 
-    self._koopa = pygame.image.load("./src/resources/koopa.jpg")
-    self._koopa = pygame.transform.scale(
-      self._koopa, (self._tam * 0.9, self._tam * 0.9)
+    self._elementos["koopa"]["imagen"] = pygame.image.load("./src/resources/koopa.jpg")
+    self._elementos["koopa"]["imagen"] = pygame.transform.scale(
+      self._elementos["koopa"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
     )
 
-    self._flor = pygame.image.load("./src/resources/flor.png")
-    self._flor = pygame.transform.scale(
-      self._flor, (self._tam * 0.9, self._tam * 0.9)
+    self._elementos["flor"]["imagen"] = pygame.image.load("./src/resources/flor.png")
+    self._elementos["flor"]["imagen"] = pygame.transform.scale(
+      self._elementos["flor"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
     )
 
 
@@ -171,36 +181,46 @@ class GUI():
       y (int): Posición de la casilla en Y.
       tipo (int): Contenido de la casilla.
     """
-    if (tipo == 1):
+    if (tipo == self._elementos["muro"]["valor"]):
       "Muro"
-      self._pintarElemento(self._muro, x, y)
-    elif (tipo == 2):
+      self._pintarElemento(self._elementos["muro"]["imagen"], x, y)
+
+    elif (tipo == self._elementos["mario"]["valor"]):
       "Mario"
-      self._pintarElemento(self._mario, x, y)
-    elif (tipo == 3):
+      self._pintarElemento(self._elementos["mario"]["imagen"], x, y)
+
+    elif (tipo == self._elementos["estrella"]["valor"]):
       "Estrella"
-      self._pintarElemento(self._estrella, x, y)
-    elif (tipo == 4):
+      self._pintarElemento(self._elementos["estrella"]["imagen"], x, y)
+
+    elif (tipo == self._elementos["flor"]["valor"]):
       "Flor"
-      self._pintarElemento(self._flor, x, y)
-    elif (tipo == 5):
+      self._pintarElemento(self._elementos["flor"]["imagen"], x, y)
+
+    elif (tipo == self._elementos["koopa"]["valor"]):
       "Koopa"
-      self._pintarElemento(self._koopa, x, y)
-    elif (tipo == 6):
+      self._pintarElemento(self._elementos["koopa"]["imagen"], x, y)
+
+    elif (tipo == self._elementos["princesa"]["valor"]):
       "Peach"
-      self._pintarElemento(self._princesa, x, y)
-    elif (tipo == 8):
+      self._pintarElemento(self._elementos["princesa"]["imagen"], x, y)
+
+    elif (tipo == self._elementos["estrella"]["valor"] + len(self._elementos)):
       "Mario encuentra una estrella"
-      self._pintarElemento(self._mario, x, y)
-    elif (tipo == 9):
+      self._pintarElemento(self._elementos["mario"]["imagen"], x, y)
+
+    elif (tipo == self._elementos["flor"]["valor"] + len(self._elementos)):
       "Mario encuentra una flor"
-      self._pintarElemento(self._mario, x, y)
-    elif (tipo == 10):
+      self._pintarElemento(self._elementos["mario"]["imagen"], x, y)
+
+    elif (tipo == self._elementos["koopa"]["valor"] + len(self._elementos)):
       "Mario encuentra un Koopa"
-      self._pintarElemento(self._mario, x, y)
-    elif (tipo == 11):
+      self._pintarElemento(self._elementos["mario"]["imagen"], x, y)
+
+    elif (tipo == self._elementos["princesa"]["valor"] + len(self._elementos)):
       "Mario encuentra a Peach"
       self._pintarFinal(x, y)
+
     else:
       self._pintarCasillaVacia(x, y)
 
@@ -240,9 +260,9 @@ class GUI():
     """
     self._pintarCasillaVacia(x, y)
 
-    self._surface.blit(self._princesa, (self._screenWidth * 0.05 + self._tam * 0.05 +
+    self._surface.blit(self._elementos["princesa"]["imagen"], (self._screenWidth * 0.05 + self._tam * 0.05 +
                        self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
-    self._surface.blit(self._mario, (self._screenWidth * 0.05 + self._tam * 0.05 +
+    self._surface.blit(self._elementos["mario"]["imagen"], (self._screenWidth * 0.05 + self._tam * 0.05 +
                        self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
 
   def _manejarEventos(self):

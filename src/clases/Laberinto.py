@@ -1,5 +1,7 @@
 # Laberinto.py
+
 import random
+
 from clases.MarioAmplitud import MarioAmplitud
 from clases.MarioCostos import MarioCostos
 from clases.MarioAvara import MarioAvara
@@ -12,6 +14,7 @@ class Laberinto:
   """
   _mario = None
   _laberinto = []
+  _elementos = {}
 
 
   def __init__(self, *args: tuple):
@@ -19,17 +22,18 @@ class Laberinto:
     Constructor del laberinto.
 
     Args:
-        args (tuple): Lista con 1 argumento.
+        args (tuple): Lista con 2 argumentos.
         + Matriz cuadrada, también puede recibir un entero indicando el tamaño de la matriz
           en cuyo caso la matriz se creará aleatoriamente.
     """
-    if (len(args) == 1):
+    self._elementos = args[1]
+    if (len(args) == 2):
       if (isinstance(args[0], int)):
         self._constructorAleatorio(args[0])
       elif (isinstance(args[0], list)):
         self._constructorDefinido(args[0])
     else:
-      raise Exception("El constructor debe recibir 1 argumento, pero recibió {}".format(len(args)))
+      raise Exception("El constructor debe recibir 2 argumentos, pero recibió {}".format(len(args)))
 
 
   def _constructorAleatorio(self, tamano: int):
@@ -39,17 +43,19 @@ class Laberinto:
     Args:
         tamano (int): Tamaño de la matriz cuadrada.
     """
-    self._mario = MarioAmplitud(tamano)
+    self._mario = MarioAmplitud(tamano, self._elementos)
 
     self._laberinto = [[{}] * tamano for i in range(tamano)]
 
+    muro = self._elementos["muro"]["valor"]
+
     for i in range(random.randrange(tamano)*random.randrange(tamano)):
-      self._laberinto[random.randrange(tamano)][random.randrange(tamano)] = 1
+      self._laberinto[random.randrange(tamano)][random.randrange(tamano)] = muro
 
     marioX, marioY = self._mario.getPos()
     self._princesa = (random.randrange(tamano), random.randrange(tamano))
-    self._laberinto[marioX][marioY] = 2
-    self._laberinto[self._princesa[0]][self._princesa[1]] = 6
+    self._laberinto[marioX][marioY] = self._elementos["mario"]["valor"]
+    self._laberinto[self._princesa[0]][self._princesa[1]] = self._elementos["princesa"]["valor"]
 
     self._mario.buscarSolucion()
 
@@ -69,9 +75,9 @@ class Laberinto:
         self._laberinto[i][j] = laberinto[i][j]
 
         if (laberinto[i][j] == 0):
-          self._laberinto[i][j] = -3
-        elif (laberinto[i][j] == 2):
-          self._mario = MarioA(laberinto)
+          self._laberinto[i][j] = 2 - len(self._elementos)
+        elif (laberinto[i][j] == self._elementos["mario"]["valor"]):
+          self._mario = MarioAmplitud(laberinto, self._elementos)
 
 
   def imprimir(self):
@@ -123,15 +129,14 @@ class Laberinto:
     Acciones a realizar en cada tic del reloj.
     """
     posMario = list(self._mario.getPos())
-    alrededor = self.getAlrededor(posMario[0], posMario[1])
 
-    self.setPos(posMario[0], posMario[1], -3)#self.getPos(posMario[0], posMario[1]) - 5)
+    self.setPos(posMario[0], posMario[1], 2 - len(self._elementos))#self.getPos(posMario[0], posMario[1]) - 5)
 
-    movimiento = self._mario.mover(alrededor[0], alrededor[1], alrededor[2], alrededor[3])
+    movimiento = self._mario.mover()
 
     posMario[0] += movimiento[0]
     posMario[1] -= movimiento[1]
 
-    self.setPos(posMario[0], posMario[1], self.getPos(posMario[0], posMario[1]) + 5)
+    self.setPos(posMario[0], posMario[1], self.getPos(posMario[0], posMario[1]) + len(self._elementos))
 
     return posMario[0] - movimiento[0], posMario[1] + movimiento[1], posMario[0], posMario[1]

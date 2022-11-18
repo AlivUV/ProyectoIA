@@ -8,8 +8,8 @@ class MarioCostos (Mario):
   Clase que modela un agente que intentará resolver un laberinto
   revisando todas las posibilidades y encontrando el camino más corto.
   """
-  _inicio = (0,0)
   _laberinto = []
+  _elementos = {}
   _nodos = []
   _listaEspera = []
   _solucion = []
@@ -30,8 +30,9 @@ class MarioCostos (Mario):
     self._solucion.clear()
     self._nodos.clear()
     self._listaEspera.clear()
+    self._elementos = args[1]
 
-    if (len(args) != 1):
+    if (len(args) != 2):
       raise Exception("El constructor debe recibir 1 argumento, pero recibió {}".format(len(args)))
     elif (isinstance(args[0], int)):
       super().__init__(args[0])
@@ -53,9 +54,8 @@ class MarioCostos (Mario):
 
     for i in range (len(laberinto)):
       for j in range (len(laberinto[0])):
-        if (laberinto[i][j] == 2):
+        if (laberinto[i][j] == self._elementos["mario"]["valor"]):
           self._posX, self._posY = (j, i)
-          self._inicio = (j, i)
 
 
   def buscarSolucion(self):
@@ -66,11 +66,11 @@ class MarioCostos (Mario):
     nodoInicial = {
       "padre": None,
       "posicion": len(self._nodos),
-      "coordenadas": self._inicio,
+      "coordenadas": (self._posX, self._posY),
       "costo": 0,
       "usado": [],
       "estado": {
-        "valor": 0
+        "valor": self._elementos["casilla vacia"]["valor"]
       }
     }
 
@@ -89,7 +89,8 @@ class MarioCostos (Mario):
     nodoAExpandir = self._evaluarNodoAExpandir()
     coordenadas = self._listaEspera[nodoAExpandir]["coordenadas"]
 
-    if (self._laberinto[coordenadas[1]][coordenadas[0]] != 6):
+    if (self._laberinto[coordenadas[1]][coordenadas[0]] != self._elementos["princesa"]["valor"]):
+      print(len(self._nodos))
       self._crearHijos(self._listaEspera.pop(nodoAExpandir))
     else:
       self._terminado = True
@@ -97,6 +98,7 @@ class MarioCostos (Mario):
       print("Costo total: {}".format(self._listaEspera[nodoAExpandir]["costo"]))
       self._crearSolucion(self._listaEspera[nodoAExpandir])
       self._listaEspera.clear()
+      self._nodos.clear()
       print("Pasos de la solución: {}".format(len(self._solucion) - 1))
       print("Solucion: {}".format(self._solucion))
 
@@ -123,7 +125,7 @@ class MarioCostos (Mario):
     alrededor = self._getAlrededor(padre["coordenadas"][0], padre["coordenadas"][1])
 
     for coordenadas in alrededor:
-      if (coordenadas[0] != 1):
+      if (coordenadas[0] != self._elementos["muro"]["valor"]):
         self._buscarCiclos(padre, self._evaluarEstado(padre, coordenadas))
 
 
@@ -153,7 +155,7 @@ class MarioCostos (Mario):
   def _poderUsado(self, padre: dict, coordenadas: tuple[int]):
     for casilla in padre["usado"]:
       if (casilla == coordenadas):
-        return 0
+        return self._elementos["casilla vacia"]["valor"]
 
     return self._laberinto[coordenadas[1]][coordenadas[0]]
 
@@ -165,15 +167,15 @@ class MarioCostos (Mario):
   def _estadoGenerico (self, padre: dict, coordenadas: tuple[int], valorCasilla: int):
     usado = padre["usado"].copy()
     estado = {
-      "valor": 0
+      "valor": self._elementos["casilla vacia"]["valor"]
     }
 
-    if (valorCasilla == 3):
-      estado["valor"] = 3
-      estado["duracion"] = 6
+    if (valorCasilla == self._elementos["estrella"]["valor"]):
+      estado["valor"] = valorCasilla
+      estado["duracion"] = self._elementos["estrella"]["duracion"]
       usado.extend([coordenadas[1:]])
-    elif (valorCasilla == 4):
-      estado["valor"] = 4
+    elif (valorCasilla == self._elementos["flor"]["valor"]):
+      estado["valor"] = valorCasilla
       estado["cantidad"] = 1
       usado.extend([coordenadas[1:]])
 
@@ -190,24 +192,24 @@ class MarioCostos (Mario):
   def _estadoEstrella (self, padre: dict, coordenadas: tuple[int], valorCasilla: int):
     usado = padre["usado"].copy()
     estado = {
-      "valor": 3,
+      "valor": self._elementos["estrella"]["valor"],
       "duracion": padre["estado"]["duracion"] - 1
     }
 
-    if (valorCasilla == 5):
+    if (valorCasilla == self._elementos["koopa"]["valor"]):
       usado.extend([coordenadas[1:]])
 
-    if (valorCasilla == 3):
-      estado["duracion"] += 6
+    if (valorCasilla == self._elementos["estrella"]["valor"]):
+      estado["duracion"] += self._elementos["estrella"]["duracion"]
       usado.extend([coordenadas[1:]])
     elif (estado["duracion"] == 0):
-      estado["valor"] = 0
+      estado["valor"] = self._elementos["casilla vacia"]["valor"]
 
     return {
       "padre": padre["posicion"],
       "posicion": len(self._nodos),
       "coordenadas": coordenadas[1:],
-      "costo": padre["costo"] + 0.5,
+      "costo": padre["costo"] + self._elementos["estrella"]["nuevo costo"],
       "estado": estado,
       "usado": usado
     }
@@ -216,21 +218,21 @@ class MarioCostos (Mario):
   def _estadoFlor (self, padre: dict, coordenadas: tuple[int], valorCasilla: int):
     usado = padre["usado"].copy()
     estado = {
-      "valor": 4,
+      "valor": self._elementos["flor"]["valor"],
       "cantidad": padre["estado"]["cantidad"]
     }
     costo = 1
     cantidad = 0
 
-    if (valorCasilla == 4):
+    if (valorCasilla == self._elementos["flor"]["valor"]):
       estado["cantidad"] += 1
       usado.extend([coordenadas[1:]])
-    elif (valorCasilla != 5):
+    elif (valorCasilla != self._elementos["koopa"]["valor"]):
       costo = self._costoXCasilla[str(valorCasilla)]
+      usado.extend([coordenadas[1:]])
     else:
       estado["cantidad"] -= 1
-      estado["valor"] = 4 if (cantidad > 0) else 0
-      usado.extend([coordenadas[1:]])
+      estado["valor"] = self._elementos["flor"]["valor"] if (cantidad > 0) else self._elementos["casilla vacia"]["valor"]
 
     return {
       "padre": padre["posicion"],
@@ -242,7 +244,7 @@ class MarioCostos (Mario):
     }
 
 
-  def mover(self, *args: tuple):
+  def mover(self):
     if (len(self._solucion) == 1):
       return (0, 0)
 

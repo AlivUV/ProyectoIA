@@ -1,5 +1,6 @@
 # MarioAvara.py
 
+from json import loads
 from math import sqrt, pow
 
 from clases.MarioAmplitud import MarioAmplitud
@@ -14,13 +15,13 @@ class MarioAvara (MarioAmplitud):
 
   def definirLaberinto(self, laberinto: list[list[int]]):
     self._laberinto = laberinto
+    self._elementos = loads(open('./src/data/estados/elementos.json').read())
 
     for i in range (len(laberinto)):
       for j in range (len(laberinto[0])):
-        if (laberinto[i][j] == 2):
+        if (laberinto[i][j] == self._elementos["mario"]["valor"]):
           self._posX, self._posY = (j, i)
-          self._inicio = (j, i)
-        elif (laberinto[i][j] == 6):
+        elif (laberinto[i][j] == self._elementos["princesa"]["valor"]):
           self._meta = (j, i)
 
 
@@ -47,4 +48,4 @@ class MarioAvara (MarioAmplitud):
     dX = coordenadas[0] - self._meta[0]
     dY = coordenadas[1] - self._meta[1]
 
-    return sqrt(pow(dX, 2) + pow(dY, 2))
+    return sqrt(pow(dX, 2) + pow(dY, 2)) / self._pasos

@@ -1,5 +1,7 @@
 # MarioAmplitud.py
 
+from json import loads
+
 from clases.Mario import Mario
 
 class MarioAmplitud (Mario):
@@ -7,8 +9,8 @@ class MarioAmplitud (Mario):
   Clase que modela un agente que intentará resolver un laberinto
   revisando todas las posibilidades y encontrando el camino más corto.
   """
-  _inicio = (0,0)
   _laberinto = []
+  _elementos = {}
   _nodos = []
   _listaEspera = []
   _solucion = []
@@ -27,8 +29,9 @@ class MarioAmplitud (Mario):
     self._solucion.clear()
     self._nodos.clear()
     self._listaEspera.clear()
+    self._elementos = args[1]
 
-    if (len(args) != 1):
+    if (len(args) != 2):
       raise Exception("El constructor debe recibir 1 argumento, pero recibió {}".format(len(args)))
     elif (isinstance(args[0], int)):
       super().__init__(args[0])
@@ -39,12 +42,12 @@ class MarioAmplitud (Mario):
 
   def definirLaberinto(self, laberinto: list[list[int]]):
     self._laberinto = laberinto
+    self._elementos = loads(open('./src/data/estados/elementos.json').read())
 
     for i in range (len(laberinto)):
       for j in range (len(laberinto[0])):
-        if (laberinto[i][j] == 2):
+        if (laberinto[i][j] == self._elementos["mario"]["valor"]):
           self._posX, self._posY = (j, i)
-          self._inicio = (j, i)
 
 
   def buscarSolucion(self):
@@ -55,7 +58,7 @@ class MarioAmplitud (Mario):
     nodoInicial = {
       "padre": None,
       "posicion": len(self._nodos),
-      "coordenadas": self._inicio
+      "coordenadas": (self._posX, self._posY)
     }
 
     self._nodos.append(nodoInicial)
@@ -73,13 +76,14 @@ class MarioAmplitud (Mario):
     nodoAExpandir = self._evaluarNodoAExpandir()
     coordenadas = self._listaEspera[nodoAExpandir]["coordenadas"]
 
-    if (self._laberinto[coordenadas[1]][coordenadas[0]] != 6):
+    if (self._laberinto[coordenadas[1]][coordenadas[0]] != self._elementos["princesa"]["valor"]):
       self._crearHijos(self._listaEspera.pop(nodoAExpandir))
     else:
       self._terminado = True
       print("Nodos creados: {}".format(len(self._nodos)))
       self._crearSolucion(self._listaEspera[nodoAExpandir])
       self._listaEspera.clear()
+      self._nodos.clear()
       print("Pasos de la solución: {}".format(len(self._solucion) - 1))
       print("Solucion: {}".format(self._solucion))
 
@@ -98,7 +102,7 @@ class MarioAmplitud (Mario):
     alrededor = self._getAlrededor(nodo["coordenadas"][0], nodo["coordenadas"][1])
 
     for coordenadas in alrededor:
-      if (coordenadas[0] != 1):
+      if (coordenadas[0] != self._elementos["muro"]["valor"]):
         nuevoNodo = {
           "padre": nodo["posicion"],
           "posicion": len(self._nodos),
@@ -130,7 +134,7 @@ class MarioAmplitud (Mario):
       self._crearSolucion(self._nodos[nodoFinal["padre"]])
 
 
-  def mover(self, *args: tuple):
+  def mover(self):
     if (len(self._solucion) == 1):
       return (0, 0)
 
