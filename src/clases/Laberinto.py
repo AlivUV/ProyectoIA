@@ -1,6 +1,9 @@
 # Laberinto.py
 import random
 from clases.MarioAmplitud import MarioAmplitud
+from clases.MarioCostos import MarioCostos
+from clases.MarioAvara import MarioAvara
+from clases.MarioA import MarioA
 
 class Laberinto:
   """
@@ -68,7 +71,7 @@ class Laberinto:
         if (laberinto[i][j] == 0):
           self._laberinto[i][j] = -3
         elif (laberinto[i][j] == 2):
-          self._mario = MarioAmplitud(laberinto)
+          self._mario = MarioA(laberinto)
 
 
   def imprimir(self):
@@ -87,42 +90,6 @@ class Laberinto:
         list: Matriz cuadrada de tamaño n con los datos del laberinto.
     """
     return self._laberinto
-
-
-  def getAlrededor(self, posX: int, posY: int):
-    """
-    Obtiene los datos en la casilla contigua a cada una de las cuatro direcciones de la posición (X, Y).
-
-    Args:
-        posX (int): Posición en X de la casilla.
-        posY (int): Posición en Y de la casilla.
-
-    Returns:
-        list[int]: información de las 4 casillas contiguas.
-    """
-    alrededor = [0] * 4
-
-    if (posX == 0):
-      alrededor[0] = 1
-      alrededor[2] = self._laberinto[posY][posX + 1]
-    elif (posX == len(self._laberinto) - 1):
-      alrededor[0] = self._laberinto[posY][posX - 1]
-      alrededor[2] = 1
-    else:
-      alrededor[0] = self._laberinto[posY][posX - 1]
-      alrededor[2] = self._laberinto[posY][posX + 1]
-
-    if (posY == 0):
-      alrededor[1] = 1
-      alrededor[3] = self._laberinto[posY + 1][posX]
-    elif (posY == len(self._laberinto) - 1):
-      alrededor[1] = self._laberinto[posY - 1][posX]
-      alrededor[3] = 1
-    else:
-      alrededor[1] = self._laberinto[posY - 1][posX]
-      alrededor[3] = self._laberinto[posY + 1][posX]
-
-    return alrededor
 
 
   def getPos(self, posX: int, posY: int):
@@ -158,7 +125,7 @@ class Laberinto:
     posMario = list(self._mario.getPos())
     alrededor = self.getAlrededor(posMario[0], posMario[1])
 
-    self.setPos(posMario[0], posMario[1], 0)#self.getPos(posMario[0], posMario[1]) - 5)
+    self.setPos(posMario[0], posMario[1], -3)#self.getPos(posMario[0], posMario[1]) - 5)
 
     movimiento = self._mario.mover(alrededor[0], alrededor[1], alrededor[2], alrededor[3])
 

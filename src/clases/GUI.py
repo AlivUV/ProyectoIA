@@ -240,9 +240,9 @@ class GUI():
     """
     self._pintarCasillaVacia(x, y)
 
-    self._surface.blit(self._mario, (self._screenWidth * 0.05 + self._tam * 0.05 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
     self._surface.blit(self._princesa, (self._screenWidth * 0.05 + self._tam * 0.05 +
+                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
+    self._surface.blit(self._mario, (self._screenWidth * 0.05 + self._tam * 0.05 +
                        self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
 
   def _manejarEventos(self):

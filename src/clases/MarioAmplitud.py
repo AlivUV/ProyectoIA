@@ -107,31 +107,6 @@ class MarioAmplitud (Mario):
         self._buscarCiclos(nodo, nuevoNodo)
 
 
-  def _getAlrededor(self, x: int, y: int):
-    '''
-    Obtiene los valores de las casillas alrededor de las coordenadas
-    XY y lo devuelve en una lista.
-    '''
-    alrededor = [[1]] * 4
-
-    if (x == 0):
-      alrededor[2] = (self._laberinto[y][x + 1], x + 1, y)
-    elif (x == len(self._laberinto) - 1):
-      alrededor[0] = (self._laberinto[y][x - 1], x - 1, y)
-    else:
-      alrededor[0] = (self._laberinto[y][x - 1], x - 1, y)
-      alrededor[2] = (self._laberinto[y][x + 1], x + 1, y)
-
-    if (y == 0):
-      alrededor[3] = (self._laberinto[y + 1][x], x, y + 1)
-    elif (y == len(self._laberinto) - 1):
-      alrededor[1] = (self._laberinto[y - 1][x], x, y - 1)
-    else:
-      alrededor[1] = (self._laberinto[y - 1][x], x, y - 1)
-      alrededor[3] = (self._laberinto[y + 1][x], x, y + 1)
-    return alrededor
-
-
   def _buscarCiclos(self, ancestro: dict, nodo: dict):
     '''
     Compara un hijo con sus antecesores para no crear un ciclo.
