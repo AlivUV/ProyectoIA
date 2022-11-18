@@ -140,7 +140,7 @@ class GUI():
       self._elementos["estrella"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
     )
 
-    self._elementos["koopa"]["imagen"] = pygame.image.load("./src/resources/koopa.jpg")
+    self._elementos["koopa"]["imagen"] = pygame.image.load("./src/resources/koopa.png")
     self._elementos["koopa"]["imagen"] = pygame.transform.scale(
       self._elementos["koopa"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
     )
