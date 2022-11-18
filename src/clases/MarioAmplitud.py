@@ -34,7 +34,7 @@ class MarioAmplitud (Mario):
       super().__init__(args[0])
     elif(isinstance(args[0], list)):
       self.definirLaberinto(args[0])
-      self.amplitud()
+      self.buscarSolucion()
 
 
   def definirLaberinto(self, laberinto: list[list[int]]):
@@ -47,7 +47,7 @@ class MarioAmplitud (Mario):
           self._inicio = (j, i)
 
 
-  def amplitud(self):
+  def buscarSolucion(self):
     '''
     Uso de la inteligencia artificial por amplitud
     para solucionar el problema de Mario en el laberinto.

@@ -1,6 +1,5 @@
 # Laberinto.py
 import random
-from clases.MarioSimple import MarioSimple
 from clases.MarioAmplitud import MarioAmplitud
 
 class Laberinto:
@@ -9,7 +8,6 @@ class Laberinto:
   Contiene al agente y una matriz cuadrada simulando el laberinto.
   """
   _mario = None
-  _princesa = ()
   _laberinto = []
 
 
@@ -38,7 +36,7 @@ class Laberinto:
     Args:
         tamano (int): Tamaño de la matriz cuadrada.
     """
-    self._mario = MarioSimple(tamano)
+    self._mario = MarioAmplitud(tamano)
 
     self._laberinto = [[{}] * tamano for i in range(tamano)]
 
@@ -49,6 +47,8 @@ class Laberinto:
     self._princesa = (random.randrange(tamano), random.randrange(tamano))
     self._laberinto[marioX][marioY] = 2
     self._laberinto[self._princesa[0]][self._princesa[1]] = 6
+
+    self._mario.buscarSolucion()
 
 
   def _constructorDefinido(self, laberinto: list[list[int]]):
@@ -65,10 +65,10 @@ class Laberinto:
       for j in range (len(laberinto[0])):
         self._laberinto[i][j] = laberinto[i][j]
 
-        if (laberinto[i][j] == 2):
+        if (laberinto[i][j] == 0):
+          self._laberinto[i][j] = -3
+        elif (laberinto[i][j] == 2):
           self._mario = MarioAmplitud(laberinto)
-        elif (laberinto[i][j] == 6):
-          self._princesa = (j, i)
 
 
   def imprimir(self):
@@ -158,13 +158,13 @@ class Laberinto:
     posMario = list(self._mario.getPos())
     alrededor = self.getAlrededor(posMario[0], posMario[1])
 
-    self.setPos(posMario[0], posMario[1], self.getPos(posMario[0], posMario[1]) - 2)
+    self.setPos(posMario[0], posMario[1], 0)#self.getPos(posMario[0], posMario[1]) - 5)
 
-    movimiento = self._mario.mover(alrededor[0], alrededor[1], alrededor[2], alrededor[3], self._princesa)
+    movimiento = self._mario.mover(alrededor[0], alrededor[1], alrededor[2], alrededor[3])
 
     posMario[0] += movimiento[0]
     posMario[1] -= movimiento[1]
 
-    self.setPos(posMario[0], posMario[1], self.getPos(posMario[0], posMario[1]) + 2)
+    self.setPos(posMario[0], posMario[1], self.getPos(posMario[0], posMario[1]) + 5)
 
     return posMario[0] - movimiento[0], posMario[1] + movimiento[1], posMario[0], posMario[1]

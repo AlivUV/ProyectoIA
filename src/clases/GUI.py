@@ -172,18 +172,34 @@ class GUI():
       tipo (int): Contenido de la casilla.
     """
     if (tipo == 1):
+      "Muro"
       self._pintarElemento(self._muro, x, y)
     elif (tipo == 2):
+      "Mario"
       self._pintarElemento(self._mario, x, y)
-    elif (tipo == 6):
-      self._pintarElemento(self._princesa, x, y)
     elif (tipo == 3):
+      "Estrella"
       self._pintarElemento(self._estrella, x, y)
     elif (tipo == 4):
+      "Flor"
       self._pintarElemento(self._flor, x, y)
     elif (tipo == 5):
+      "Koopa"
       self._pintarElemento(self._koopa, x, y)
+    elif (tipo == 6):
+      "Peach"
+      self._pintarElemento(self._princesa, x, y)
     elif (tipo == 8):
+      "Mario encuentra una estrella"
+      self._pintarElemento(self._mario, x, y)
+    elif (tipo == 9):
+      "Mario encuentra una flor"
+      self._pintarElemento(self._mario, x, y)
+    elif (tipo == 10):
+      "Mario encuentra un Koopa"
+      self._pintarElemento(self._mario, x, y)
+    elif (tipo == 11):
+      "Mario encuentra a Peach"
       self._pintarFinal(x, y)
     else:
       self._pintarCasillaVacia(x, y)
