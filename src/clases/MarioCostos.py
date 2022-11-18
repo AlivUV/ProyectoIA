@@ -90,7 +90,6 @@ class MarioCostos (Mario):
     coordenadas = self._listaEspera[nodoAExpandir]["coordenadas"]
 
     if (self._laberinto[coordenadas[1]][coordenadas[0]] != self._elementos["princesa"]["valor"]):
-      print(len(self._nodos))
       self._crearHijos(self._listaEspera.pop(nodoAExpandir))
     else:
       self._terminado = True

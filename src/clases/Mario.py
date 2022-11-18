@@ -6,7 +6,7 @@ class Mario:
   """
   Clase que modela un agente que intentará resolver un laberinto.
   """
-  _pasos = 2
+  _pasos = 1
   _posX = 0
   _posY = 0
   _memoria = []

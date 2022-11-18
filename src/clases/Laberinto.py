@@ -77,7 +77,7 @@ class Laberinto:
         if (laberinto[i][j] == 0):
           self._laberinto[i][j] = 2 - len(self._elementos)
         elif (laberinto[i][j] == self._elementos["mario"]["valor"]):
-          self._mario = MarioAmplitud(laberinto, self._elementos)
+          self._mario = MarioA(laberinto, self._elementos)
 
 
   def imprimir(self):
