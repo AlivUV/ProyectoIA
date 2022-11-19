@@ -5,7 +5,7 @@ Karen Moreno        - 1922373
 Álvaro Portocarrero - 1922171
 
 En el repositorio se encuentra el proyecto "Mario Smart" de la materia Inteligencia Artificial.
-El objetivo del proyecto es modelar un laberinto 10x10, en el que Mario, haciendo uso de algoritmos de inteligencia artificial,
+El objetivo del proyecto es modelar un laberinto en el que Mario, haciendo uso de algoritmos de búqueda de inteligencia artificial,
 encuentra a la princesa Peach.
 
 También hay otros elementos en el mapa, flores, estrellas y koopas. Las flores le permiten obtener una bala que podrá usar contra un koopa,
