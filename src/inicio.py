@@ -75,6 +75,8 @@ def retornar(contenido, algoritmo):
 
     ventana.iniciar()
 
+    print(ventana.getSolucion())
+
 
 def cargarLaberinto(contenido):
     laberinto = contenido

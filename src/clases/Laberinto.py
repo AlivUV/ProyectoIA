@@ -15,6 +15,7 @@ class Laberinto:
   _mario = None
   _laberinto = []
   _elementos = {}
+  _solucion = {}
 
 
   def __init__(self, *args: tuple):
@@ -173,3 +174,7 @@ class Laberinto:
     self.setPos(posMario[0], posMario[1], self.getPos(posMario[0], posMario[1]) + len(self._elementos))
 
     return posMario[0] - movimiento[0], posMario[1] + movimiento[1], posMario[0], posMario[1]
+
+
+  def getSolucion(self):
+    return self._mario.getSolucion()

@@ -25,6 +25,7 @@ class GUI():
   _estrella = None
   _princesa = None
   _lineWidth = 1
+  _solucion = {}
 
   def __init__(self, *args):
     """
@@ -323,6 +324,11 @@ class GUI():
       self._mover(self._laberinto.onTic())
 
       time.sleep(1)
+
+
+  def getSolucion(self):
+    return self._laberinto.getSolucion()
+
 
   def _mover(self, casillas: tuple[int]):
     """
