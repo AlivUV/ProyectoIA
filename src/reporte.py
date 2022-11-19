@@ -51,14 +51,12 @@ def show_labels():
 
 def pintar_reporte(screen, nodos, profundidad, tiempo):
     Label(
-        screen, nodos, 400, 420, 25, color="white")
+        screen, str(nodos), 400, 420, 25, color="white")
     Label(
-        screen, profundidad, 400, 480, 25, color="white")
+        screen, str(profundidad), 400, 480, 25, color="white")
     Label(
-        screen, tiempo, 400, 540, 25, color="white")
+        screen, str(tiempo), 400, 540, 25, color="white")
     show_labels()
-    # se muestran lo cambios en pantalla
-    pygame.display.flip()
 
 
 def main():
