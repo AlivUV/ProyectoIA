@@ -22,28 +22,50 @@ class Laberinto:
     Constructor del laberinto.
 
     Args:
-        args (tuple): Lista con 2 argumentos.
-        + Matriz cuadrada, también puede recibir un entero indicando el tamaño de la matriz
+        args (tuple): Lista con 3 argumentos.
+        + Matriz cuadrada (int / list[list[int]]): también puede recibir un entero indicando el tamaño de la matriz
           en cuyo caso la matriz se creará aleatoriamente.
+        + Algoritmo: Algoritmo de búsqueda que se utilizará para resolver el laberinto:
+          * Búsqueda no informada:
+            1. Búsqueda por amplitud (1).
+            2. Búsqueda por costos (2).
+            3. Búsqueda por profundidad (3).
+          * Búsqueda informada:
+            4. Búsqueda avara (4).
+            5. Búsqueda por A* (5) .
+        + Elementos: Objeto con datos de cada elemento en el algoritmo.
     """
-    self._elementos = args[1]
-    if (len(args) == 2):
+    self._elementos = args[2]
+
+    if (len(args) == 3):
       if (isinstance(args[0], int)):
-        self._constructorAleatorio(args[0])
+        self._constructorAleatorio(args[0], args[1])
       elif (isinstance(args[0], list)):
-        self._constructorDefinido(args[0])
+        self._constructorDefinido(args[0], args[1])
     else:
       raise Exception("El constructor debe recibir 2 argumentos, pero recibió {}".format(len(args)))
 
 
-  def _constructorAleatorio(self, tamano: int):
+  def _constructorAleatorio(self, tamano: int, algoritmo: int):
     """
     Construye el laberinto con una matriz cuadrada de manera aleatoria.
 
     Args:
-        tamano (int): Tamaño de la matriz cuadrada.
+        args (tuple): Lista con 3 argumentos.
+        + Matriz cuadrada (int / list[list[int]]): también puede recibir un entero indicando el tamaño de la matriz
+          en cuyo caso la matriz se creará aleatoriamente.
+        + Algoritmo: Algoritmo de búsqueda que se utilizará para resolver el laberinto:
+          * Búsqueda no informada:
+            1. Búsqueda por amplitud (1).
+            2. Búsqueda por costos (2).
+            3. Búsqueda por profundidad (3).
+          * Búsqueda informada:
+            4. Búsqueda avara (4).
+            5. Búsqueda por A* (5).
     """
-    self._mario = MarioAmplitud(tamano, self._elementos)
+    algoritmos = [MarioAmplitud, MarioCostos, MarioA, MarioAvara, MarioA]
+
+    self._mario = algoritmos[algoritmo - 1](tamano, self._elementos)
 
     self._laberinto = [[{}] * tamano for i in range(tamano)]
 
@@ -60,15 +82,26 @@ class Laberinto:
     self._mario.buscarSolucion()
 
 
-  def _constructorDefinido(self, laberinto: list[list[int]]):
+  def _constructorDefinido(self, laberinto: list[list[int]], algoritmo: int):
     """
     Construye el laberinto con la matriz cuadrada recibida.
     Recorre la matriz para encontrar el agente y la meta.
 
     Args:
-        laberinto (list[list[int]]): Matriz cuadrada con los datos del nuevo laberinto.
+        args (tuple): Lista con 3 argumentos.
+        + Matriz cuadrada (int / list[list[int]]): también puede recibir un entero indicando el tamaño de la matriz
+          en cuyo caso la matriz se creará aleatoriamente.
+        + Algoritmo: Algoritmo de búsqueda que se utilizará para resolver el laberinto:
+          * Búsqueda no informada:
+            1. Búsqueda por amplitud (1).
+            2. Búsqueda por costos (2).
+            3. Búsqueda por profundidad (3).
+          * Búsqueda informada:
+            4. Búsqueda avara (4).
+            5. Búsqueda por A* (5) .
     """
     self._laberinto = [[{}] * len(laberinto) for i in range(len(laberinto))]
+    algoritmos = [MarioAmplitud, MarioCostos, MarioA, MarioAvara, MarioA]
 
     for i in range (len(laberinto)):
       for j in range (len(laberinto[0])):
@@ -77,7 +110,7 @@ class Laberinto:
         if (laberinto[i][j] == 0):
           self._laberinto[i][j] = 2 - len(self._elementos)
         elif (laberinto[i][j] == self._elementos["mario"]["valor"]):
-          self._mario = MarioA(laberinto, self._elementos)
+          self._mario = algoritmos[algoritmo - 1](laberinto, self._elementos)
 
 
   def imprimir(self):

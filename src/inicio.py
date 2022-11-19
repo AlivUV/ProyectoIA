@@ -64,12 +64,12 @@ class AperturaArchivo():
 
         if archivo is not None:
             contenido1 = archivo.read()
-            print(contenido1)
+
             return contenido1
 
 
 def retornar(contenido, algoritmo):
-    ventana = GUI(cargarLaberinto(contenido), 600, 600)
+    ventana = GUI(cargarLaberinto(contenido), algoritmo, 600, 600)
 
     time.sleep(1)
 
@@ -78,16 +78,14 @@ def retornar(contenido, algoritmo):
 
 def cargarLaberinto(contenido):
     laberinto = contenido
-    print(contenido)
 
-    laberinto = laberinto.split("\n")
+    laberinto = laberinto.strip().split("\n")
 
     for i in range(len(laberinto)):
         laberinto[i] = laberinto[i].strip().split()
 
     for i in range(len(laberinto)):
         for j in range(len(laberinto[0])):
-            print((i, j))
             laberinto[i][j] = int(laberinto[i][j])
 
     return laberinto
@@ -225,7 +223,7 @@ def main():
                 if (575 <= pygame.mouse.get_pos()[0] <= 690 and 450 <= pygame.mouse.get_pos()[1] <= 500):
                     if (contenido is not None and algoritmo != 0):
                         retornar(contenido, algoritmo)
-                    print(algoritmo)
+
             elif event.type == pygame.MOUSEMOTION:
                 if (520 <= pygame.mouse.get_pos()[0] <= 780 and 330 <= pygame.mouse.get_pos()[1] <= 375):
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)

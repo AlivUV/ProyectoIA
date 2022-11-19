@@ -29,38 +29,60 @@ class GUI():
     Constructor de la interfaz gráfica.
 
     Args:
-      args (tuple): Lista con 1 argumento.
-      + Matriz cuadrada, también puede recibir un entero indicando el tamaño de la matriz
-        en cuyo caso la matriz se creará aleatoriamente.
+        * args (tuple): Lista con 2 argumentos y 2 opcionales:
+          + Matriz cuadrada (int / list[list[int]]): También puede recibir un entero indicando el tamaño de la matriz
+            en cuyo caso la matriz se creará aleatoriamente.
+          + Algoritmo (int): Algoritmo de búsqueda que se utilizará para resolver el laberinto:
+            - Búsqueda no informada:
+              1. Búsqueda por amplitud.
+              2. Búsqueda por costos.
+              3. Búsqueda por profundidad.
+            - Búsqueda informada:
+              4. Búsqueda avara.
+              5. Búsqueda por A*.
+          + Elementos (dict): Objeto con datos de cada elemento en el algoritmo.
+          + Ancho (width: int = opcional): También puede recibir un entero indicando el tamaño de la matriz
+            en cuyo caso la matriz se creará aleatoriamente.
+          + Largo (heigth: int = opcional) También puede recibir un entero indicando el tamaño de la matriz
+            en cuyo caso la matriz se creará aleatoriamente.
+
     """
-    if (len(args) == 1):
+    if (len(args) == 2):
       if (isinstance(args[0], int)):
-        self._constructorAleatorio(args[0])
+        self._constructorAleatorio(args[0], args[1])
       elif (isinstance(args[0], list)):
-        self._constructorDefinido(args[0])
+        self._constructorDefinido(args[0], args[1])
       else:
         raise Exception(
           "El tipo de dato {} no es una entrada válida.".format(type(args[0])))
     else:
       if (isinstance(args[0], int)):
         self._constructorAleatorio(
-          args[0], width=args[1], height=args[2])
+          args[0], args[1],width = args[2], height = args[3])
       elif (isinstance(args[0], list)):
         self._constructorDefinido(
-          args[0], width=args[1], height=args[2])
+          args[0], args[1], width = args[2], height = args[3])
       else:
         raise Exception(
           "El tipo de dato {} no es una entrada válida.".format(type(args[0])))
 
-  def _constructorAleatorio(self, tamano: int, width: int = 900, height: int = 900):
+  def _constructorAleatorio(self, tamano: int, algoritmo: int, width: int = 900, height: int = 900):
     """
     Construye la ventana con la cuadrícula y los elementos del laberinto
     creados de manera aleatoria.
 
     Args:
-      tamano (int): Tamaño de la matriz cuadrada.
-      width (int optional): Ancho de la ventana. Defaults to 900.
-      height (int optional): Alto de la ventana. Defaults to 900.
+      + tamano (int): Tamaño de la matriz cuadrada.
+      + Algoritmo (int): Algoritmo de búsqueda que se utilizará para resolver el laberinto:
+        * Búsqueda no informada:
+          1. Búsqueda por amplitud (1).
+          2. Búsqueda por costos (2).
+          3. Búsqueda por profundidad (3).
+        * Búsqueda informada:
+          4. Búsqueda avara (4).
+          5. Búsqueda por A* (5).
+      + width (int opcional): Ancho de la ventana. Defaults to 900.
+      + height (int opcional): Alto de la ventana. Defaults to 900.
     """
     self._elementos = loads(open('./src/data/estados/elementos.json').read())
 
@@ -69,7 +91,7 @@ class GUI():
 
     self._tam = width * 0.9 / tamano
 
-    self._laberinto = Laberinto(tamano, self._elementos)
+    self._laberinto = Laberinto(tamano, algoritmo, self._elementos)
 
     self._crearVentana(width, height)
 
@@ -77,18 +99,26 @@ class GUI():
 
     self._pintarLaberinto()
 
-  def _constructorDefinido(self, matriz: list[list[int]], width: int = 900, height: int = 900):
+  def _constructorDefinido(self, matriz: list[list[int]], algoritmo: int, width: int = 900, height: int = 900):
     """
     Construye la ventana con la cuadrícula y los elementos del laberinto.
 
     Args:
-      matriz (list): Matriz cuadrada con los datos del nuevo laberinto.
-      width (int optional): Ancho de la ventana. Defaults to 900.
-      height (int optional): Alto de la ventana. Defaults to 900.
+      + tamano (int): Tamaño de la matriz cuadrada.
+      + Algoritmo (int): Algoritmo de búsqueda que se utilizará para resolver el laberinto:
+        * Búsqueda no informada:
+          1. Búsqueda por amplitud (1).
+          2. Búsqueda por costos (2).
+          3. Búsqueda por profundidad (3).
+        * Búsqueda informada:
+          4. Búsqueda avara (4).
+          5. Búsqueda por A* (5).
+      + width (int opcional): Ancho de la ventana. Defaults to 900.
+      + height (int opcional): Alto de la ventana. Defaults to 900.
     """
     self._elementos = loads(open('./src/data/estados/elementos.json').read())
 
-    self._laberinto = Laberinto(matriz, self._elementos)
+    self._laberinto = Laberinto(matriz, algoritmo, self._elementos)
 
     self._tam = width * 0.9 / len(matriz)
 
@@ -122,7 +152,7 @@ class GUI():
     """
     self._elementos["muro"]["imagen"] = pygame.image.load("./src/resources/muro.png")
     self._elementos["muro"]["imagen"] = pygame.transform.scale(
-      self._elementos["muro"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
+      self._elementos["muro"]["imagen"], (self._tam, self._tam)
     )
 
     self._elementos["mario"]["imagen"] = pygame.image.load("./src/resources/mario.png")
@@ -183,7 +213,7 @@ class GUI():
     """
     if (tipo == self._elementos["muro"]["valor"]):
       "Muro"
-      self._pintarElemento(self._elementos["muro"]["imagen"], x, y)
+      self._pintarElemento(self._elementos["muro"]["imagen"], x, y, 1)
 
     elif (tipo == self._elementos["mario"]["valor"]):
       "Mario"
@@ -237,7 +267,7 @@ class GUI():
     pygame.draw.rect(self._surface, "dark gray", (self._screenWidth * 0.05 + self._tam * x,
                      self._screenHeight * 0.05 + self._tam * y, self._tam, self._tam), self._lineWidth)
 
-  def _pintarElemento(self, elem, x: int, y: int):
+  def _pintarElemento(self, elem, x: int, y: int, tam: float = 0.9):
     """
     Dibuja la casilla que contiene la princesa.
 
@@ -247,8 +277,8 @@ class GUI():
     """
     self._pintarCasillaVacia(x, y)
 
-    self._surface.blit(elem, (self._screenWidth * 0.05 + self._tam * 0.05 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
+    self._surface.blit(elem, (self._screenWidth * 0.05 + self._tam * ((1 - tam) / 2) +
+                       self._tam * x, self._screenHeight * 0.05 + self._tam * ((1 - tam) / 2) + self._tam * y))
 
   def _pintarFinal(self, x: int, y: int):
     """
