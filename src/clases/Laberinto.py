@@ -100,7 +100,7 @@ class Laberinto:
             4. Búsqueda avara (4).
             5. Búsqueda por A* (5) .
     """
-    self._laberinto = [[{}] * len(laberinto) for i in range(len(laberinto))]
+    self._laberinto = [[0] * len(laberinto[0]) for i in range(len(laberinto))]
     algoritmos = [MarioAmplitud, MarioCostos, MarioA, MarioAvara, MarioA]
 
     for i in range (len(laberinto)):

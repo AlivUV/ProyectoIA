@@ -14,6 +14,8 @@ class GUI():
   _screenHeight = 0
   _abierto = False
   _tam = 0
+  _anchoCasilla = 0
+  _altoCasilla = 0
   _surface = None
   _muro = None
   _laberinto = None
@@ -90,6 +92,8 @@ class GUI():
     self._screenHeight = height * 0.9
 
     self._tam = width * 0.9 / tamano
+    self._anchoCasilla = width * 0.9 / tamano
+    self._altoCasilla = width * 0.9 / tamano
 
     self._laberinto = Laberinto(tamano, algoritmo, self._elementos)
 
@@ -121,6 +125,8 @@ class GUI():
     self._laberinto = Laberinto(matriz, algoritmo, self._elementos)
 
     self._tam = width * 0.9 / len(matriz)
+    self._anchoCasilla = width * 0.9 / len(matriz[0])
+    self._altoCasilla = width * 0.9 / len(matriz)
 
     self._crearVentana(width, height)
 
@@ -152,32 +158,32 @@ class GUI():
     """
     self._elementos["muro"]["imagen"] = pygame.image.load("./src/resources/muro.png")
     self._elementos["muro"]["imagen"] = pygame.transform.scale(
-      self._elementos["muro"]["imagen"], (self._tam, self._tam)
+      self._elementos["muro"]["imagen"], (self._anchoCasilla, self._altoCasilla)
     )
 
     self._elementos["mario"]["imagen"] = pygame.image.load("./src/resources/mario.png")
     self._elementos["mario"]["imagen"] = pygame.transform.scale(
-      self._elementos["mario"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
+      self._elementos["mario"]["imagen"], (self._anchoCasilla * 0.9, self._altoCasilla * 0.9)
     )
 
     self._elementos["princesa"]["imagen"] = pygame.image.load("./src/resources/princesa.png")
     self._elementos["princesa"]["imagen"] = pygame.transform.scale(
-      self._elementos["princesa"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
+      self._elementos["princesa"]["imagen"], (self._anchoCasilla * 0.9, self._altoCasilla * 0.9)
     )
 
     self._elementos["estrella"]["imagen"] = pygame.image.load("./src/resources/estrella.png")
     self._elementos["estrella"]["imagen"] = pygame.transform.scale(
-      self._elementos["estrella"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
+      self._elementos["estrella"]["imagen"], (self._anchoCasilla * 0.9, self._altoCasilla * 0.9)
     )
 
     self._elementos["koopa"]["imagen"] = pygame.image.load("./src/resources/koopa.png")
     self._elementos["koopa"]["imagen"] = pygame.transform.scale(
-      self._elementos["koopa"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
+      self._elementos["koopa"]["imagen"], (self._anchoCasilla * 0.9, self._altoCasilla * 0.9)
     )
 
     self._elementos["flor"]["imagen"] = pygame.image.load("./src/resources/flor.png")
     self._elementos["flor"]["imagen"] = pygame.transform.scale(
-      self._elementos["flor"]["imagen"], (self._tam * 0.9, self._tam * 0.9)
+      self._elementos["flor"]["imagen"], (self._anchoCasilla * 0.9, self._altoCasilla * 0.9)
     )
 
 
@@ -187,7 +193,7 @@ class GUI():
     """
 
     for i in range(len(self._laberinto.getLaberinto())):
-      for j in range(len(self._laberinto.getLaberinto())):
+      for j in range(len(self._laberinto.getLaberinto()[0])):
         self._pintarCasilla(j, i, self._laberinto.getLaberinto()[i][j])
 
     self._pintarBorde()
@@ -262,10 +268,10 @@ class GUI():
       x (int): Posición de la casilla en X. 
       y (int): Posición de la casilla en Y.
     """
-    pygame.draw.rect(self._surface, "white", (self._screenWidth * 0.05 + self._tam *
-                     x, self._screenHeight * 0.05 + self._tam * y, self._tam, self._tam))
-    pygame.draw.rect(self._surface, "dark gray", (self._screenWidth * 0.05 + self._tam * x,
-                     self._screenHeight * 0.05 + self._tam * y, self._tam, self._tam), self._lineWidth)
+    pygame.draw.rect(self._surface, "white", (self._screenWidth * 0.05 + self._anchoCasilla *
+                     x, self._screenHeight * 0.05 + self._altoCasilla * y, self._anchoCasilla, self._altoCasilla))
+    pygame.draw.rect(self._surface, "dark gray", (self._screenWidth * 0.05 + self._anchoCasilla * x,
+                     self._screenHeight * 0.05 + self._altoCasilla * y, self._anchoCasilla, self._altoCasilla), self._lineWidth)
 
   def _pintarElemento(self, elem, x: int, y: int, tam: float = 0.9):
     """
@@ -277,8 +283,8 @@ class GUI():
     """
     self._pintarCasillaVacia(x, y)
 
-    self._surface.blit(elem, (self._screenWidth * 0.05 + self._tam * ((1 - tam) / 2) +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * ((1 - tam) / 2) + self._tam * y))
+    self._surface.blit(elem, (self._screenWidth * 0.05 + self._anchoCasilla * ((1 - tam) / 2) +
+                       self._anchoCasilla * x, self._screenHeight * 0.05 + self._altoCasilla * ((1 - tam) / 2) + self._altoCasilla * y))
 
   def _pintarFinal(self, x: int, y: int):
     """
@@ -290,10 +296,10 @@ class GUI():
     """
     self._pintarCasillaVacia(x, y)
 
-    self._surface.blit(self._elementos["princesa"]["imagen"], (self._screenWidth * 0.05 + self._tam * 0.05 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
-    self._surface.blit(self._elementos["mario"]["imagen"], (self._screenWidth * 0.05 + self._tam * 0.05 +
-                       self._tam * x, self._screenHeight * 0.05 + self._tam * 0.05 + self._tam * y))
+    self._surface.blit(self._elementos["princesa"]["imagen"], (self._screenWidth * 0.05 + self._anchoCasilla * 0.05 +
+                       self._anchoCasilla * x, self._screenHeight * 0.05 + self._altoCasilla * 0.05 + self._altoCasilla * y))
+    self._surface.blit(self._elementos["mario"]["imagen"], (self._screenWidth * 0.05 + self._anchoCasilla * 0.05 +
+                       self._anchoCasilla * x, self._screenHeight * 0.05 + self._altoCasilla * 0.05 + self._altoCasilla * y))
 
   def _manejarEventos(self):
     """
