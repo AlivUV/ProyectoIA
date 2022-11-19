@@ -36,7 +36,6 @@ duracion = datetime.now() - inicio
 
 print("Duración: {}".format(duracion))
 
-"""
 
 print("===Costos===")
 
@@ -46,7 +45,8 @@ mario = MarioCostos(laberinto, elementos)
 
 duracion = datetime.now() - inicio
 
-print("Duración: {}".format(duracion))"""
+print("Duración: {}".format(duracion))
+
 
 print("===Profundidad===")
 
@@ -58,7 +58,7 @@ duracion = datetime.now() - inicio
 
 print("Duración: {}".format(duracion))
 
-"""
+
 print("===Avara===")
 
 inicio = datetime.now()
@@ -77,4 +77,4 @@ mario = MarioA(laberinto, elementos)
 
 duracion = datetime.now() - inicio
 
-print("Duración: {}".format(duracion))"""
+print("Duración: {}".format(duracion))
