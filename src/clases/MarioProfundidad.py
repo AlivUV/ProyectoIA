@@ -1,6 +1,7 @@
 # MarioProfundidad.py
 
 from clases.Mario import Mario
+from datetime import datetime
 from json import loads
 
 class MarioProfundidad(Mario):
@@ -17,8 +18,9 @@ class MarioProfundidad(Mario):
   _elementos = {}
   _nodos = []
   _pila = []
-  _solucion = []
+  _solucion = {}
   _final = False
+  _tiempoInicio = 0
 
   def __init__(self, *args: tuple):
 
@@ -30,7 +32,13 @@ class MarioProfundidad(Mario):
       + laberinto (list): Matriz cuadrada que contiene los datos del laberinto.
       + tamaño (int): Tamaño de la matriz cuadrada.
     """
-    self._solucion.clear()
+    self._solucion = {
+      "total nodos": 0,
+      "profundidad": 0,
+      "tiempo": 0,
+      "camino": []
+    }
+
     self._nodos.clear()
     self._pila.clear()
     self._elementos = args[1]
@@ -49,7 +57,8 @@ class MarioProfundidad(Mario):
           self._posX, self._posY = (j, i)
 
   def profundidad(self):
-      
+    self._tiempoInicio = datetime.now()
+
     primerNodo = {
       "padre": None,
       "posicion": len(self._nodos),
@@ -60,7 +69,7 @@ class MarioProfundidad(Mario):
     self._nodos.append(primerNodo)
 
     while (not self._final):
-      coordenadaMario = self._pila[len(self._pila) - 1]["coordenadas"]
+      coordenadaMario = self._pila[-1]["coordenadas"]
       if(len(self._pila) == 0):
         print("Falló")
         self._final = True
@@ -72,8 +81,8 @@ class MarioProfundidad(Mario):
         self.solucionHallada(self._pila[-1])
         self._pila.clear()
         self._nodos.clear()
-        print("Pasos de la solución: ", len(self._solucion) - 1)
-        print("Solucion: ", self._solucion)
+        print("Pasos de la solución: {}".format(len(self._solucion["camino"]) - 1))
+        print("Solucion: {}".format(self._solucion["camino"]))
         
       
   def expandirHijos(self, nodoRecibido):
@@ -121,24 +130,34 @@ class MarioProfundidad(Mario):
     return posiblesHijos
   
   def solucionHallada(self, ultimoNodo):
-
+    '''
     self._solucion.insert(0, ultimoNodo["coordenadas"])
     if (ultimoNodo["padre"] != None):
       self.solucionHallada(self._nodos[ultimoNodo["padre"]])
+    '''
 
-  def mover(self, *args: tuple):
-    if (len(self._solucion) == 1):
+    self._solucion["total nodos"] = len(self._nodos)
+    self._solucion["tiempo"] = datetime.now() - self._tiempoInicio
+
+    self._solucion["camino"].insert(0, ultimoNodo["coordenadas"])
+
+    if (ultimoNodo["padre"] != None):
+      self.solucionHallada(self._nodos[ultimoNodo["padre"]])
+    else:
+      self._solucion["profundidad"] = len(self._solucion["camino"]) - 1
+
+  def getSolucion(self):
+    return self._solucion
+
+
+  def mover(self):
+    if (len(self._solucion["camino"]) == 1):
       return (0, 0)
 
-    viejasCoordenadas = self._solucion.pop()
+    viejasCoordenadas = self._solucion["camino"].pop(0)
 
-    self._posX, self._posY = self._solucion[self._solucion.index(viejasCoordenadas)]
+    self._posX, self._posY = self._solucion["camino"][0]
 
     movimiento = (self._posX - viejasCoordenadas[0], viejasCoordenadas[1] - self._posY)
 
     return movimiento
-
-
-
-
-
