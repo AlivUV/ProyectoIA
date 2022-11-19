@@ -1,6 +1,7 @@
 # MarioProfundidad.py
 
 from clases.Mario import Mario
+from json import loads
 
 class MarioProfundidad(Mario):
     
@@ -12,13 +13,12 @@ class MarioProfundidad(Mario):
   Se evitan los ciclos.
   """
 
-  _inicial = (0,0)
   _laberinto = []
+  _elementos = {}
   _nodos = []
   _pila = []
   _solucion = []
   _final = False
-  _profundidad = None
 
   def __init__(self, *args: tuple):
 
@@ -30,30 +30,30 @@ class MarioProfundidad(Mario):
       + laberinto (list): Matriz cuadrada que contiene los datos del laberinto.
       + tamaño (int): Tamaño de la matriz cuadrada.
     """
-    self._laberinto.clear()
+    self._solucion.clear()
     self._nodos.clear()
     self._pila.clear()
-    self._solucion.clear()
-    
+    self._elementos = args[1]
+
     self.definirLaberinto(args[0])
     self.profundidad()
 
-  def definirLaberinto(self, laberinto: list):
-      
+
+  def definirLaberinto(self, laberinto: list[list[int]]):
     self._laberinto = laberinto
+    self._elementos = loads(open('./src/data/estados/elementos.json').read())
 
     for i in range (len(laberinto)):
       for j in range (len(laberinto[0])):
-        if (laberinto[i][j] == 2):
+        if (laberinto[i][j] == self._elementos["mario"]["valor"]):
           self._posX, self._posY = (j, i)
-          self._inicio = (j, i)
 
   def profundidad(self):
       
     primerNodo = {
       "padre": None,
       "posicion": len(self._nodos),
-      "coordenadas": self._inicio
+      "coordenadas": (self._posX, self._posY)
     }
     
     self._pila.append(primerNodo)
@@ -64,25 +64,26 @@ class MarioProfundidad(Mario):
       if(len(self._pila) == 0):
         print("Falló")
         self._final = True
-      if (self._laberinto[coordenadaMario[1]][coordenadaMario[0]] != 6):
+      if (self._laberinto[coordenadaMario[1]][coordenadaMario[0]] != self._elementos["princesa"]["valor"]):
         self.expandirHijos(self._pila.pop())
         return 
       else:
         print("Lo logró señor, lo logró") 
         self._final = True
+        print("Nodos creados: ", (len(self._nodos)))
         self.solucionHallada(self.pila[self._pila.index(self._pila.pop())])
-        print("Nodos creados: {}".format(len(self._nodos)))
         self._pila.clear()
+        self._nodos.clear()
         print("Pasos de la solución: ", len(self._solucion) - 1)
         print("Solucion: ", self._solucion)
         
       
   def expandirHijos(self, nodoRecibido):
-    
+    print(nodoRecibido)
     posiblesHijos = self.obtenerPosiblesHijos(nodoRecibido["coordenadas"][0], nodoRecibido["coordenadas"][1])
 
     for coordenadas in posiblesHijos:
-      if (coordenadas[0] != 1):
+      if (coordenadas[0] != self._elementos["muro"]["valor"]):
         siguienteNodo = {
           "padre": nodoRecibido["posicion"],
           "posicion": len(self._nodos),
@@ -121,7 +122,7 @@ class MarioProfundidad(Mario):
       posiblesHijos[3] = (self._laberinto[coordenadaY + 1][coordenadaX], coordenadaX, coordenadaY + 1) #Borde inferior, mueve hacia arriba
     else:
       posiblesHijos[3] = (self._laberinto[coordenadaY + 1][coordenadaX], coordenadaX, coordenadaY + 1) #Se encuentra en las filas
-      posiblesHijos[3] = (self._laberinto[coordenadaY + 1][coordenadaX], coordenadaX, coordenadaY + 1) #del medio
+      posiblesHijos[3] = (self._laberinto[coordenadaY + 1][coordenadaX], coordenadaX, coordenadaY + 1) #del medio"""
     print(posiblesHijos)
     return posiblesHijos
   
