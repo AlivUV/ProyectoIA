@@ -2,6 +2,7 @@
 
 from clases.MarioAmplitud import MarioAmplitud
 from clases.MarioCostos import MarioCostos
+from clases.MarioProfundidad import MarioProfundidad
 from clases.MarioAvara import MarioAvara
 from clases.MarioA import MarioA
 
@@ -42,6 +43,18 @@ print("===Costos===")
 inicio = datetime.now()
 
 mario = MarioCostos(laberinto, elementos)
+
+duracion = datetime.now() - inicio
+
+print("Duración: {}".format(duracion))
+
+print(mario.getSolucion())
+
+print("===Profundidad===")
+
+inicio = datetime.now()
+
+mario = MarioProfundidad(laberinto, elementos)
 
 duracion = datetime.now() - inicio
 
