@@ -2,6 +2,7 @@
 
 import random
 
+from clases.MarioProfundidad import MarioProfundidad
 from clases.MarioAmplitud import MarioAmplitud
 from clases.MarioCostos import MarioCostos
 from clases.MarioAvara import MarioAvara
@@ -63,7 +64,7 @@ class Laberinto:
             4. Búsqueda avara (4).
             5. Búsqueda por A* (5).
     """
-    algoritmos = [MarioAmplitud, MarioCostos, MarioA, MarioAvara, MarioA]
+    algoritmos = [MarioAmplitud, MarioCostos, MarioProfundidad, MarioAvara, MarioA]
 
     self._mario = algoritmos[algoritmo - 1](tamano, self._elementos)
 
@@ -101,7 +102,7 @@ class Laberinto:
             5. Búsqueda por A* (5) .
     """
     self._laberinto = [[0] * len(laberinto[0]) for i in range(len(laberinto))]
-    algoritmos = [MarioAmplitud, MarioCostos, MarioA, MarioAvara, MarioA]
+    algoritmos = [MarioAmplitud, MarioCostos, MarioProfundidad, MarioAvara, MarioA]
 
     for i in range (len(laberinto)):
       for j in range (len(laberinto[0])):

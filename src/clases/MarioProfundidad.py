@@ -59,19 +59,18 @@ class MarioProfundidad(Mario):
     self._pila.append(primerNodo)
     self._nodos.append(primerNodo)
 
-    coordenadaMario = self._pila[0]["coordenadas"]
     while (not self._final):
+      coordenadaMario = self._pila[len(self._pila) - 1]["coordenadas"]
       if(len(self._pila) == 0):
         print("Falló")
         self._final = True
       if (self._laberinto[coordenadaMario[1]][coordenadaMario[0]] != self._elementos["princesa"]["valor"]):
         self.expandirHijos(self._pila.pop())
-        return 
       else:
         print("Lo logró señor, lo logró") 
         self._final = True
         print("Nodos creados: ", (len(self._nodos)))
-        self.solucionHallada(self.pila[self._pila.index(self._pila.pop())])
+        self.solucionHallada(self._pila[-1])
         self._pila.clear()
         self._nodos.clear()
         print("Pasos de la solución: ", len(self._solucion) - 1)
@@ -79,9 +78,7 @@ class MarioProfundidad(Mario):
         
       
   def expandirHijos(self, nodoRecibido):
-    print(nodoRecibido)
     posiblesHijos = self.obtenerPosiblesHijos(nodoRecibido["coordenadas"][0], nodoRecibido["coordenadas"][1])
-
     for coordenadas in posiblesHijos:
       if (coordenadas[0] != self._elementos["muro"]["valor"]):
         siguienteNodo = {
@@ -106,29 +103,30 @@ class MarioProfundidad(Mario):
 
   def obtenerPosiblesHijos(self, coordenadaX : int, coordenadaY : int):
     
+    # Orden de prioridad => (0: Derecha, 1: Bajar, 2: Izquierda, 3: Subir)
+
     posiblesHijos = [ [1], [1], [1], [1] ]
 
     if(coordenadaX == 0):
-      posiblesHijos[2] = (self._laberinto[coordenadaY][coordenadaX + 1], coordenadaX + 1, coordenadaY) #Borde izquierdo, mueve hacia la derecha
-    if(coordenadaX == len(self._laberinto) - 1 ):
-      posiblesHijos[0] = (self._laberinto[coordenadaY][coordenadaX - 1], coordenadaX - 1, coordenadaY) #Borde derecho, mueve hacia la izquierda
+      posiblesHijos[0] = (self._laberinto[coordenadaY][coordenadaX + 1], coordenadaX + 1, coordenadaY) #Borde izquierdo, mueve hacia la derecha
+    elif(coordenadaX == len(self._laberinto) - 1 ):
+      posiblesHijos[2] = (self._laberinto[coordenadaY][coordenadaX - 1], coordenadaX - 1, coordenadaY) #Borde derecho, mueve hacia la izquierda
     else: 
-      posiblesHijos[2] = (self._laberinto[coordenadaY][coordenadaX + 1], coordenadaX + 1, coordenadaY) #Se encuentra en las columnas
-      posiblesHijos[0] = (self._laberinto[coordenadaY][coordenadaX - 1], coordenadaX - 1, coordenadaY) #del medio
+      posiblesHijos[0] = (self._laberinto[coordenadaY][coordenadaX - 1], coordenadaX - 1, coordenadaY) #Se encuentra en las columnas
+      posiblesHijos[2] = (self._laberinto[coordenadaY][coordenadaX + 1], coordenadaX + 1, coordenadaY) #del medio
     
     if(coordenadaY == 0):
-      posiblesHijos[3] = (self._laberinto[coordenadaY + 1][coordenadaX], coordenadaX, coordenadaY + 1) #Borde superior, mueve hacia abajo
-    if(coordenadaY == len(self._laberinto) - 1 ):
-      posiblesHijos[3] = (self._laberinto[coordenadaY + 1][coordenadaX], coordenadaX, coordenadaY + 1) #Borde inferior, mueve hacia arriba
+      posiblesHijos[1] = (self._laberinto[coordenadaY + 1][coordenadaX], coordenadaX, coordenadaY + 1) #Borde superior, mueve hacia abajo
+    elif(coordenadaY == len(self._laberinto) - 1 ):
+      posiblesHijos[3] = (self._laberinto[coordenadaY - 1][coordenadaX], coordenadaX, coordenadaY - 1) #Borde inferior, mueve hacia arriba
     else:
-      posiblesHijos[3] = (self._laberinto[coordenadaY + 1][coordenadaX], coordenadaX, coordenadaY + 1) #Se encuentra en las filas
-      posiblesHijos[3] = (self._laberinto[coordenadaY + 1][coordenadaX], coordenadaX, coordenadaY + 1) #del medio"""
-    print(posiblesHijos)
+      posiblesHijos[1] = (self._laberinto[coordenadaY + 1][coordenadaX], coordenadaX, coordenadaY + 1) #Se encuentra en las filas
+      posiblesHijos[3] = (self._laberinto[coordenadaY - 1][coordenadaX], coordenadaX, coordenadaY - 1) #del medio
     return posiblesHijos
   
   def solucionHallada(self, ultimoNodo):
 
-    self._solucion.append(ultimoNodo["coordenadas"])
+    self._solucion.insert(0, ultimoNodo["coordenadas"])
     if (ultimoNodo["padre"] != None):
       self.solucionHallada(self._nodos[ultimoNodo["padre"]])
 
