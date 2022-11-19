@@ -142,11 +142,11 @@ class MarioCostos (Mario):
     '''
     Compara un hijo con sus antecesores para no crear un ciclo.
     '''
-    if (ancestro["padre"] == None):
+    if (ancestro["coordenadas"] == nodo["coordenadas"] and ancestro["estado"] == nodo["estado"]):
+      return
+    elif (ancestro["padre"] == None):
       self._nodos.append(nodo)
       self._listaEspera.append(nodo)
-    elif (ancestro["coordenadas"] == nodo["coordenadas"] and ancestro["estado"] == nodo["estado"]):
-      return
     else:
       self._buscarCiclos(self._nodos[ancestro["padre"]], nodo)
 
