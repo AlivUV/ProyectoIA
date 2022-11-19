@@ -6,6 +6,7 @@ class Mario:
   """
   Clase que modela un agente que intentará resolver un laberinto.
   """
+  _pasos = 1
   _posX = 0
   _posY = 0
   _memoria = []
@@ -75,6 +76,29 @@ class Mario:
     """
     self._posX = newPosX
     self._posY = newPosY
+
+
+  def _getAlrededor(self, x: int, y: int):
+    '''
+    Obtiene los valores de las casillas alrededor de las coordenadas
+    XY y lo devuelve en una lista.
+    '''
+    alrededor = []
+    direccion = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+
+    for i in range(4):
+      for n in range(1, self._pasos + 1):
+        try:
+          if (x + (direccion[i][0] * n) >= 0 and y + (direccion[i][1] * n) >= 0):
+            alrededor.append([
+              self._laberinto[y + (direccion[i][1] * n)][x + (direccion[i][0] * n)], 
+              x + (direccion[i][0] * n), 
+              y + (direccion[i][1] * n)
+            ])
+        except:
+          'Fuera de rango.'
+
+    return alrededor
 
 
   def mover(self):

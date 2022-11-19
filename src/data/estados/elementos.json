@@ -1,0 +1,25 @@
+{
+  "casilla vacia": {
+    "valor": 0
+  },
+  "muro": {
+    "valor": 1
+  },
+  "mario": {
+    "valor": 2
+  },
+  "estrella": {
+    "valor": 3,
+    "duracion": 6,
+    "nuevo costo": 0.5
+  },
+  "flor": {
+    "valor": 4
+  },
+  "koopa": {
+    "valor": 5
+  },
+  "princesa": {
+    "valor": 6
+  }
+}

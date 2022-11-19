@@ -1,6 +1,12 @@
 # pruebas.py
-from json import loads
+
 from clases.MarioAmplitud import MarioAmplitud
+from clases.MarioCostos import MarioCostos
+from clases.MarioAvara import MarioAvara
+from clases.MarioA import MarioA
+
+from datetime import datetime
+from json import loads
 
 def cargarLaberinto():
   laberinto = open("./src/data/laberinto/laberintoProyecto.txt").read()
@@ -16,4 +22,45 @@ def cargarLaberinto():
 
   return laberinto
 
-mario = MarioAmplitud(cargarLaberinto())
+laberinto = cargarLaberinto()
+elementos = loads(open("./src/data/estados/elementos.json").read())
+
+print("===Amplitud===")
+
+inicio = datetime.now()
+
+mario = MarioAmplitud(laberinto, elementos)
+
+duracion = datetime.now() - inicio
+
+print("Duración: {}".format(duracion))
+
+print("===Costos===")
+
+inicio = datetime.now()
+
+mario = MarioCostos(laberinto, elementos)
+
+duracion = datetime.now() - inicio
+
+print("Duración: {}".format(duracion))
+
+print("===Avara===")
+
+inicio = datetime.now()
+
+mario = MarioAvara(laberinto, elementos)
+
+duracion = datetime.now() - inicio
+
+print("Duración: {}".format(duracion))
+
+print("===A*===")
+
+inicio = datetime.now()
+
+mario = MarioA(laberinto, elementos)
+
+duracion = datetime.now() - inicio
+
+print("Duración: {}".format(duracion))

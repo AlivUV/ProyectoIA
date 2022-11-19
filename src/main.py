@@ -4,12 +4,12 @@ from json import loads
 from clases.GUI import GUI
 
 def cargarLaberinto():
-  laberinto = open("./src/data/laberinto/laberintoProyecto.txt").read()
+  laberinto = open("./src/data/laberinto/LaberintoProyecto.txt").read()
 
   laberinto = laberinto.split("\n")
 
   for i in range (len(laberinto)):
-    laberinto[i] = laberinto[i].split()
+    laberinto[i] = laberinto[i].strip().split()
 
   for i in range (len(laberinto)):
     for j in  range (len(laberinto[0])):
