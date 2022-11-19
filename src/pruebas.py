@@ -10,7 +10,7 @@ from datetime import datetime
 from json import loads
 
 def cargarLaberinto():
-  laberinto = open("./src/data/laberinto/Prueba2.txt").read()
+  laberinto = open("./src/data/laberinto/laberintoProyecto.txt").read()
 
   laberinto = laberinto.split("\n")
 
