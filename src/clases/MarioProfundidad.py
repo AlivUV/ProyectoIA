@@ -67,7 +67,6 @@ class MarioProfundidad(Mario):
       if (self._laberinto[coordenadaMario[1]][coordenadaMario[0]] != self._elementos["princesa"]["valor"]):
         self.expandirHijos(self._pila.pop())
       else:
-        print("Lo logró señor, lo logró") 
         self._final = True
         print("Nodos creados: ", (len(self._nodos)))
         self.solucionHallada(self._pila[-1])
@@ -87,7 +86,6 @@ class MarioProfundidad(Mario):
           "coordenadas": (coordenadas[1], coordenadas[2])
         }
         self.evitarCiclos(nodoRecibido, siguienteNodo)
-        #self.eliminarRamaPerdida(self, siguienteNodo)
 
   def evitarCiclos(self, nodoPadre, nodoHijo):
     if (nodoPadre["padre"] == None):
@@ -97,8 +95,6 @@ class MarioProfundidad(Mario):
       return
     else:
       self.evitarCiclos(self._nodos[nodoPadre["padre"]], nodoHijo)
-
-  #def eliminarRamaPerdida(self, nodoAnalizar):
 
 
   def obtenerPosiblesHijos(self, coordenadaX : int, coordenadaY : int):
