@@ -4,6 +4,7 @@ import sys
 import time
 from tkinter.filedialog import askopenfile
 from clases.GUI import GUI
+import reporte
 
 pygame.init()
 
@@ -68,12 +69,18 @@ class AperturaArchivo():
             return contenido1
 
 
-def retornar(contenido, algoritmo):
+def retornar(contenido, algoritmo, screen):
     ventana = GUI(cargarLaberinto(contenido), algoritmo, 600, 600)
 
     time.sleep(1)
 
     ventana.iniciar()
+
+    solucion = ventana.getSolucion()
+
+    reporte.pintar_reporte(screen,
+                           solucion["total nodos"], solucion["profundidad"], solucion["tiempo"])
+    reporte.main()
 
 
 def cargarLaberinto(contenido):
@@ -222,7 +229,7 @@ def main():
                 # Botón de inicio
                 if (575 <= pygame.mouse.get_pos()[0] <= 690 and 450 <= pygame.mouse.get_pos()[1] <= 500):
                     if (contenido is not None and algoritmo != 0):
-                        retornar(contenido, algoritmo)
+                        retornar(contenido, algoritmo, screen)
 
             elif event.type == pygame.MOUSEMOTION:
                 if (520 <= pygame.mouse.get_pos()[0] <= 780 and 330 <= pygame.mouse.get_pos()[1] <= 375):

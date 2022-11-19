@@ -1,6 +1,7 @@
 # MarioAmplitud.py
 
 from json import loads
+from datetime import datetime
 
 from clases.Mario import Mario
 
@@ -13,8 +14,9 @@ class MarioAmplitud (Mario):
   _elementos = {}
   _nodos = []
   _listaEspera = []
-  _solucion = []
+  _solucion = {}
   _terminado = False
+  _tiempoInicio = 0
 
 
   def __init__(self, *args: tuple):
@@ -26,7 +28,13 @@ class MarioAmplitud (Mario):
         + tamaño (int): Tamaño de la matriz cuadrada.
         + laberinto (list): Matriz cuadrada que contiene los datos del laberinto.
     """
-    self._solucion.clear()
+    self._solucion = {
+      "total nodos": 0,
+      "profundidad": 0,
+      "tiempo": 0,
+      "camino": []
+    }
+
     self._nodos.clear()
     self._listaEspera.clear()
     self._elementos = args[1]
@@ -55,6 +63,8 @@ class MarioAmplitud (Mario):
     Uso de la inteligencia artificial por amplitud
     para solucionar el problema de Mario en el laberinto.
     '''
+    self._tiempoInicio = datetime.now()
+
     nodoInicial = {
       "padre": None,
       "posicion": len(self._nodos),
@@ -84,8 +94,8 @@ class MarioAmplitud (Mario):
       self._crearSolucion(self._listaEspera[nodoAExpandir])
       self._listaEspera.clear()
       self._nodos.clear()
-      print("Pasos de la solución: {}".format(len(self._solucion) - 1))
-      print("Solucion: {}".format(self._solucion))
+      print("Pasos de la solución: {}".format(len(self._solucion["camino"]) - 1))
+      print("Solucion: {}".format(self._solucion["camino"]))
 
 
   def _evaluarNodoAExpandir(self):
@@ -115,11 +125,11 @@ class MarioAmplitud (Mario):
     '''
     Compara un hijo con sus antecesores para no crear un ciclo.
     '''
-    if (ancestro["padre"] == None):
+    if (ancestro["coordenadas"] == nodo["coordenadas"]):
+      return
+    elif (ancestro["padre"] == None):
       self._nodos.append(nodo)
       self._listaEspera.append(nodo)
-    elif (ancestro["coordenadas"] == nodo["coordenadas"]):
-      return
     else:
       self._buscarCiclos(self._nodos[ancestro["padre"]], nodo)
 
@@ -129,18 +139,27 @@ class MarioAmplitud (Mario):
     Construye la solución paso por paso devolviéndose por los 
     ancestros del nodo solución.
     '''
-    self._solucion.insert(0, nodoFinal["coordenadas"])
+    self._solucion["total nodos"] = len(self._nodos)
+    self._solucion["tiempo"] = datetime.now() - self._tiempoInicio
+
+    self._solucion["camino"].insert(0, nodoFinal["coordenadas"])
     if (nodoFinal["padre"] != None):
       self._crearSolucion(self._nodos[nodoFinal["padre"]])
+    else:
+      self._solucion["profundidad"] = len(self._solucion["camino"])
+
+
+  def getSolucion(self):
+    return self._solucion
 
 
   def mover(self):
-    if (len(self._solucion) == 1):
+    if (len(self._solucion["camino"]) == 1):
       return (0, 0)
 
-    viejasCoordenadas = self._solucion.pop(0)
+    viejasCoordenadas = self._solucion["camino"].pop(0)
 
-    self._posX, self._posY = self._solucion[0]
+    self._posX, self._posY = self._solucion["camino"][0]
 
     movimiento = (self._posX - viejasCoordenadas[0], viejasCoordenadas[1] - self._posY)
 
