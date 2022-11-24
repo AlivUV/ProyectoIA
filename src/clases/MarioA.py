@@ -60,4 +60,4 @@ class MarioA (MarioCostos):
     dX = coordenadas[0] - self._meta[0]
     dY = coordenadas[1] - self._meta[1]
 
-    return sqrt(pow(dX, 2) + pow(dY, 2)) / 2 * self._pasos
+    return sqrt(pow(dX, 2) + pow(dY, 2)) / (2 * self._pasos)
