@@ -116,6 +116,7 @@ class MarioCostos (Mario):
     ''' 
     Recorre la lista de espera para encontrar el nodo con el menor costo
     '''
+    return 0
     costo = 1000000
     posicion = 0
 
@@ -146,9 +147,29 @@ class MarioCostos (Mario):
       return
     elif (ancestro["padre"] == None):
       self._nodos.append(nodo)
-      self._listaEspera.append(nodo)
+      self._listaEspera.insert(self._posicionAnadir(nodo, 0, len(self._listaEspera)), nodo)
     else:
       self._buscarCiclos(self._nodos[ancestro["padre"]], nodo)
+
+
+  def _posicionAnadir(self, nodo, inicio, final):
+    '''
+    Retorna la posición ideal para añadir el nuevo nodo teniendo en cuenta su costo.
+    '''
+    centro = inicio + round((final - inicio) / 2)
+
+    if (final - inicio == 0):
+      return inicio
+    elif (final - inicio == 1 and nodo["costo"] < self._listaEspera[centro]["costo"]):
+      return inicio
+    elif (final - inicio == 1 and nodo["costo"] >= self._listaEspera[centro]["costo"]):
+      return inicio + 1
+    elif (nodo["costo"] < self._listaEspera[centro]["costo"]):
+      return self._posicionAnadir(nodo, inicio, centro)
+    elif (nodo["costo"] > self._listaEspera[centro]["costo"]):
+      return self._posicionAnadir(nodo, centro, final)
+    else:
+      return centro + 1
 
 
   def _crearSolucion(self, nodoFinal: dict):
