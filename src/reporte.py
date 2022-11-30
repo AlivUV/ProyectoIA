@@ -49,13 +49,16 @@ def show_labels():
         _.draw()
 
 
-def pintar_reporte(screen, nodos, profundidad, tiempo):
+def pintar_reporte(screen, nodos, profundidad, tiempo, costo):
     Label(
         screen, str(nodos), 400, 420, 25, color="white")
     Label(
         screen, str(profundidad), 400, 480, 25, color="white")
     Label(
-        screen, str(tiempo), 400, 540, 25, color="white")
+        screen, str(costo), 400, 540, 25, color="white")
+    Label(
+        screen, str(tiempo), 400, 600, 25, color="white")
+
     show_labels()
 
 
@@ -80,13 +83,16 @@ def main():
         screen, "Reporte", 460, 180, 80, color="white")
 
     nodos = Label(
-        screen, "Cantidad de nodos expandidos: ", 50, 420, 25, color="white")
+        screen, "Cantidad de nodos creados: ", 50, 420, 25, color="white")
 
     arbol = Label(
         screen, "Profundidad del árbol: ", 50, 480, 25, color="white")
 
+    Costo = Label(
+        screen, "Costo de la solución: ", 50, 540, 25, color="white")
+
     tiempo = Label(
-        screen, "Tiempo de cómputo: ", 50, 540, 25, color="white")
+        screen, "Tiempo de cómputo: ", 50, 600, 25, color="white")
 
     show_labels()
     # se muestran lo cambios en pantalla
